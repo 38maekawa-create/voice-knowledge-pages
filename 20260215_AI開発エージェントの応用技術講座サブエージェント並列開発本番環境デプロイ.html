@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI開発エージェントの応用技術講座：サブエージェント・並列開発・本番環境デプロイ</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.transcript-toggle:hover {
+  opacity: 0.9;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>AI開発エージェントの応用技術講座：サブエージェント・並列開発・本番環境デプロイ</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年02月15日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">10分13秒</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">青木（講師）, Speaker B, Speaker C, Speaker D, Speaker E</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#ea4335;">聴講者</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">external</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">AI開発</span> <span class="badge badge-tag">エージェント</span> <span class="badge badge-tag">サブエージェント</span> <span class="badge badge-tag">並列開発</span> <span class="badge badge-tag">Cursor</span> <span class="badge badge-tag">Claude</span> <span class="badge badge-tag">エージェントチーム</span> <span class="badge badge-tag">GitHub</span> <span class="badge badge-tag">Googleクラウド</span> <span class="badge badge-tag">CLI</span> <span class="badge badge-tag">本番環境</span> <span class="badge badge-tag">デプロイ</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>AI開発エージェント（Cursor等）の実践的な使い方について、GitHubとの連携、サブエージェントによる並列開発、エージェントチームの概念などが解説された</li>
+<li>本番環境へのデプロイにはGoogleクラウドのCLI利用が推奨され、開発にはOPUS 4.6、エラー修正にはCodex 5.3というモデルの使い分けテクニックが紹介された</li>
+<li>サブエージェントは作業を分担して開発時間を短縮できるが課金量が増加する点、エージェントチームは専門家を固定チームとして継続的に活用する新概念である点が説明された</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>AI開発の基本設定</h3>
+<p>新規プロジェクト作成時は必ずGitHubに接続して新しいリポジトリを作成してから要件定義を開始する必要がある。これは開発の初期段階で必ず実施すべき作業として強調された。</p>
+<h3>サブエージェントと並列開発</h3>
+<p>サブエージェントは開発作業量が多い場合に作業を分担する仕組み。メインエージェントが自動的に複数のサブエージェント（A、B、C、D等）に役割を振り分け、開発時間を大幅に短縮できる（例：30分→10分）。ただしトークン使用量が増加するため課金額も増える。エージェント数の調整も可能で、10個提案されたものを5個に減らすなどの交渉ができる。従来の直列開発に対し、これは並列開発と呼ばれる。</p>
+<h3>エージェントチームの新概念</h3>
+<p>Claudeで実装された新機能で、サブエージェントが作業終了後に消えるのに対し、エージェントチームは専門家が固定チームとして継続的に作業を回す仕組み。ただし実装初期段階で、チームから離脱するエージェントが出現するなどの不具合も報告されている。将来的にはエージェントチームとサブエージェントを組み合わせた複雑な構成も可能になると予想される。</p>
+<h3>本番環境へのデプロイ</h3>
+<p>GoogleクラウドのCLI（コマンドラインインターフェース）を使用することで、本番環境へのアップロード作業を大幅に自動化できる。技術要件でGoogleクラウド使用を指定しておくことが重要。初回のみクレジットカード登録等の従量課金設定が必要だが、2回目以降は非常に簡単。AWSなど他のサービスよりGoogleクラウドが最も簡単で優秀と評価されている。</p>
+<h3>モデルの使い分けテクニック</h3>
+<p>OPUS 4.6は開発に優れた「最強のミッドフィルダー」、Codex 5.3はエラー修正やコードレビューに優れた「ディフェンシブ」な特性を持つ。エラーが繰り返し修正できない場合、モデルを切り替えることで解決することが多い。定番の開発フローは、OPUS 4.6で開発を進め、最終的なエラー修正とコードチェックをCodex 5.3で行うという方法。</p>
+<h3>ローカルと本番環境の違い</h3>
+<p>本番環境にアップすると、ローカル環境では出なかったエラーが発生することがあるため、エラーチェックと修正の経験を積むことが推奨されている。</p></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[00:00:51]</span> <strong>Speaker A</strong><br>必ず毎回新しいプロジェクトを作ったら、GitHubにつないで新しいリポジトリを作成してから要件定義をする</div>
+<div class="quote-block"><span class="timestamp">[00:01:59]</span> <strong>Speaker A</strong><br>サブエージェントを使うとトークン使用量が増えるため課金量が増えるが、開発時間は大幅に短縮できる（30分→10分など）</div>
+<div class="quote-block"><span class="timestamp">[00:03:02]</span> <strong>Speaker A</strong><br>従来の1体での直列開発に対し、サブエージェントによる並列開発は複数の機能を同時開発する概念</div>
+<div class="quote-block"><span class="timestamp">[00:03:35]</span> <strong>Speaker A</strong><br>エージェントチームという新概念がClaudeに実装された。サブエージェントが作業後に消えるのに対し、チームは固定メンバーで継続的に作業を回す</div>
+<div class="quote-block"><span class="timestamp">[00:07:04]</span> <strong>Speaker A</strong><br>GoogleクラウドのCLI使用により、1回目の開発が一番大変だが2回目以降はめちゃくちゃ楽になる</div>
+<div class="quote-block"><span class="timestamp">[00:08:18]</span> <strong>Speaker A</strong><br>エラーが治らない時はモデルをOPUS 4.6からCodex 5.3に切り替えると解決することがある。これは担当する人間を変えるのと同じ発想</div>
+<div class="quote-block"><span class="timestamp">[00:09:10]</span> <strong>Speaker A</strong><br>定番の開発フローはOPUSでガッと開発して、最終的なエラー修正とコードチェックはCodexに切り替える</div>
+</div>
+
+
+
+
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <div class="transcript">
+    <p>**Speaker A**: The fit for you. Please be sure. The same screen on the other day, new agent to press the high-cutter home. I have another holder on the other screen on the top row, of course, so go just go on the top row. So then, another window with a this. Please be sure. And the new window, another new window goes up and the menu bar will be displayed. The menu bar will be displayed. Yeah, it will. And then、</p>
+<p>そうするとまた一番最初の画面に戻ってオープンフォルダみたいになるので、オープンファイルみたいになるんで、これ必ず設定してください。</p>
+<p>で、次、必ず毎回新しいの作ったら、必ずもう1回GitHubにつないで新しいフォルダ作る。新しいデポ、デストリボ作る。</p>
+<p>[00:00:51] 必ずこの作業をしてから要件定義をするっていうのだけ覚えてください。一番最初にやってもらうと思います。</p>
+<p>で次3番目で、2回目以降の開発。もう2回目はすでにやっちゃった人は3回目以降の開発でもいいですけど、是非今度サブエージェントっていうものを試してみる経験をして欲しいなと思っていて。サブエージェントって何なの?って言った時に、単純にただ開発する作業量がめちゃくちゃ多かった場合時間かかるんですよ。</p>
+<p>時間かかるって言っても今早いから30分40分で結構重くとも結構いくんですけど、それでももっと早くやれと。逆に開発を分担、作業を分担しようっていう概念がサブエージェントです。</p>
+<p>だから指示するだけです。サブエージェント使ってもっと開発早められないの?って言えば、じゃあこの開発はエージェントA、この会社のエージェントB、この開発はエージェントC、このエージェントDって勝手に役割振るんです。</p>
+<p>これで開発しますみたいな。そうすると開発時間が30分のところが10分で終わりますけどいかがでしょうかみたいな感じをやってくれます。</p>
+<p>[00:01:59] で、これにするとめっちゃになるんですけど、何が問題かっていうと、トークン使用量が増えるんで、課金量が増える。</p>
+<p>だから課金して早く終わらせたい—</p>
+<p>**Speaker B**: Mm-hmm.</p>
+<p>**Speaker A**: って時は、でもサブエージェント使った方がいいです。</p>
+<p>なのでサブエージェントは、ここ一番、メインエージェント使っているここがメインだったとした時に勝手にここを必要な数増やして、じゃこれを別に勝手に分担で3個ぐらいでどうでしょう?ってOKって言ってもいいし、</p>
+<p>もっともっと早く、すごい大規模な開発で10個エージェント用意してきたんだけど、さすがに10個サブエージェント走らせたら課金えぐそうって思ったら、そこで半分ぐらいの5エージェントぐらいでやってくんない?とかっていう交渉したりするパターンもあります。だから本当に普通に部下とかスタッフを、人足りねえから雇ってくるみたいな感じだと思ってください。</p>
+<p>でこれがサブエージェントです。簡単にできます。一言言うだけなんで。</p>
+<p>[00:03:02] で、用件定義的に言うと、最近でこれのことをよく業界で何て言ったかっていうと並列開発って言いました。今までは1体でやってるんで直列開発なんですよ。</p>
+<p>今、フローを上から順番に1つのエージェントがこなしていくから直列実行だったんですけど、サブエージェントになると分け合うので並列開発、複数の機能を同時開発するっていう概念になります。</p>
+<p>[00:03:35] さらにここ1週間くらいで新たに出てきたのがエージェントチームっていう概念が出てきていて、これはまだパーソルではできないんですけどClaudeではできます。</p>
+<p>に実装されました。で、Claudeで始まったことは、すぐ他でも全部できるようになるんで、Agent Teamって概念が出てきていて、チームっていうのはちょっと似てるんですよこっちと。</p>
+<p>作業を普通に割り振って役割分担してこなすっていうのとほぼ—</p>
+<p>**Speaker C**: Mm.</p>
+<p>**Speaker A**: 似てるんですけど、もうちょっと概念的にはもうちょっとこう横並び感。</p>
+<p>このエージェントって作業したら消えるんですよ。役割終えたんで僕帰りますみたいな。人間組織と一緒ですよ。こちら終わったら帰るんですよ。</p>
+<p>もちろんずっと固定のチームとして専門家を分けてお互いの中でグルグルグルグル作業を回すみたいな。だからいなくならないっていう設定ですね。</p>
+<p>ただ今おもろいのがX見てると、1人作業チームから飛んだ奴いるんだけどってループがある。</p>
+<p>本当に人間みたいな。教育をしたの?</p>
+<p>何が帰ってこないみたいな。</p>
+<p>飛んだ飛んだ飛んだようですとか、そう。</p>
+<p>まぁだけどまぁそういうのもアップデートかかっていくと思うんですけど。</p>
+<p>[00:05:04] はい。まあ一応そういう概念が出てきてるっていう覚えていってください。</p>
+<p>で、まあこれ簡単なんで全然こっからいけちゃうかなと思いますし。</p>
+<p>で、もっと言うと、エージェントチームが多分できると、例えばこの専門家A専門家B専門家C専門家Dでチーム組んでぐるぐる回してるときに、多分ここにまたサブエージェントがつくとか、kind of like all of these system tasks or something like that, kind of concept.</p>
+<p>**Speaker D**: Hmm.</p>
+<p>**Speaker A**: Something like that concept will come.</p>
+<p>So, yeah, people are here? Kind of feeling, kind of feeling. Okay. So that's that.</p>
+<p>So, well, maybe more education but for now, the second second or third people, I'll tell them to just do this.</p>
+<p>[00:05:57] あと本番環境にアップするっていう経験もぜひしてほしいので、本番環境にアップしたい人は本番環境にアップしたいって言えばいい。</p>
+<p>一応技術要件のときにGoogleクラウドを使うように指定していればあとGoogleクラウドで本番環境アップしますねって動きするんですけど、その時にこっちにこれやってあれやってって最初めっちゃ聞いてくると思います。それを回避したいんでこのGoogleクラウドのCLIを使えっていう指示をすると結構向こうに作業をほぼしっかりすることができる。</p>
+<p>で多分最初初めて使うときはGoogleクラウド上でのこれサーバーなんでサーバー自体に課金設定だけこちらで、サーバー代発生したときの従量課金の設定だけしなきゃいけないんで、そういうクレジットカード登録作業とか出ると思うんですけど、1回やってしまえばあと2回目以降の開発はもうずっとこのCLIの力でもうやってやってやってで終わります。</p>
+<p>[00:07:04] ほぼ最後なくなります。だから1回目の開発が一番大変で、2回目以降はめちゃくちゃ楽—</p>
+<p>**Speaker E**: Mm-hmm.</p>
+<p>**Speaker A**: です。</p>
+<p>で、なので、いろんなサーバー契約するよりもGoogleクラウドがとにかく優秀なんで、一番ダントツ簡単でダントツ優秀なんで、もうサーバーは全部Googleクラウドってくれて、もうCLIで全部やってもらっていうのが賢いです。</p>
+<p>困ることないです。はい、Google使ってて。</p>
+<p>で変にAWSとかそういうのを聞いたことあるなとかそういうの欲張ってやると自国を見るっていう。フリーエンジニアは一番簡単なやりかたでいくんですね。</p>
+<p>であと本番環境にアップするとローカルの時には出なかったエラーとかでたりするんでそれもエラーチェックしてみてください。であとエラーをスクショ撮って送ってるんだけどこれローカルでもそうなんですけど、</p>
+<p>[00:07:57] 全然治らんぞみたいな。こいつこのエラー何回繰り返すねみたいな時が起きたら、モードをですね、今opus 4.6になってるやつをcodex 5.3っていうのにモードを切り替えてエラー処理させてみると実は治ったりします。</p>
+<p>[00:08:18] これ何かっていうと、人間をチェンジするみたいな感じです。</p>
+<p>同じ人間に作業やらせて同じミス出て直せって言っても直んなかったら別の人間連れてくるとか、得意領域が違うから直ったりするみたいな感じです。で特徴は僕の中ではOPUSシリーズはサッカーで言ったら最強のミッドフィルダー10番みたいな感じなんですよ。背番号10番みたいな。最強なのは間違いないんですけど、Codexの方はもうちょっとディフェンシブ寄りなんですよ。</p>
+<p>だから、エラーを直すとかコードレビューするとかそういう守り的な動きに関してはCodexの方が優秀っていう傾向が結構あって。だから開発している人たちの中で定番になるのが、まずOPUSでガッて開発して、</p>
+<p>[00:09:10] 最終的なエラー修正とかコードチェックはCodexに切り替えてやっちゃうみたいなメディアムです。</p>
+<p>これは結構定番です。</p>
+<p>なので、治らないときはCodex 5.3に切り替えるというのをやってみて。</p>
+<p>という感じで、またとりあえずまた開発進めていって、分かんないことあった聞いてください。はい。</p>
+<p>まあ次、4日ぐらいにまたちょっと状況を聞きつつ、はい、進捗状況に合わせて、ちょっとまた追加シェアしようかなと思います。</p>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 02:47
+</div>
+
+</div>
+</body>
+</html>
