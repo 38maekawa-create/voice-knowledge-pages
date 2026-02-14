@@ -296,22 +296,6 @@ body {
   font-size: 0.9em;
 }
 
-.transcript-toggle {
-  cursor: pointer;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-size: 0.9em;
-  font-weight: 500;
-  margin-bottom: 12px;
-}
-
-.transcript-toggle:hover {
-  opacity: 0.9;
-}
-
 .transcript .speaker {
   font-weight: 700;
   color: var(--primary);
@@ -321,6 +305,45 @@ body {
 
 .transcript p {
   margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
 }
 
 /* フッター */
@@ -355,11 +378,11 @@ body {
     </div>
     <div class="meta-item">
       <span class="meta-label">話者</span>
-      <span class="meta-value">青木（講師）, Speaker B, Speaker C, Speaker D, Speaker E, Speaker F</span>
+      <span class="meta-value">青木（Speaker A）</span>
     </div>
     <div class="meta-item">
       <span class="meta-label">前川の立場</span>
-      <span class="badge badge-role" style="background:#ea4335;">聴講者</span>
+      <span class="badge badge-role" style="background:#666;">聴講者（青木さんの講義を受講）</span>
     </div>
     <div class="meta-item">
       <span class="meta-label">カテゴリ</span>
@@ -414,8 +437,12 @@ body {
 
 <div class="section">
   <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
-  <div class="transcript">
-    <p>**青木**: まず単純に開発はもう、これいかに楽にしてやろうとかのために、どういう工夫をするかっていうゲームになってくるんですね。あえて皆さんにはこれを今、そのヒントを少ない状態の中でやってもらってるんですよ。これぐらい出るんだみたいな。</p>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <p>**青木**: まず単純に開発はもう、これいかに楽にしてやろうとかのために、どういう工夫をするかっていうゲームになってくるんですね。あえて皆さんにはこれを今、そのヒントを少ない状態の中でやってもらってるんですよ。これぐらい出るんだみたいな。</p>
 <p>**青木**: 今フォーカス4.6になってるんで、そもそも減ってるんですけど、ただそれでもまだエラーは残ると。それをいかにして楽にするか、工夫の話でいった時に、そこに出てくるのがルールズっていう概念とスキルズっていう概念が2つ出てきます。これ何なのかって話なんですけど。</p>
 <p>**青木**: ルールズって何なのかっていうと、要するに開発を楽にするためのルールを決めて、そのルールに沿って報道してもらうっていう、普通の会社組織と一緒です。うちの会社の行動規範はこれだからみたいな、うちのタスクのセリフ作りやる時のルールはこれだからっていうのを、全員これを必ず守ってくださいっていうのをルールを作ってしまう。</p>
 <p>**青木**: じゃあ例えばどういうルールを作れば楽になるのかって言った時に、僕が最初思いついたルールは何だったかっていうと、例えば開発しました、そしたらテストしなきゃいけないんだけど、自分でエラーテストするのがもうめんどくさくなっちゃったから、テストを代わりにやってもらうと。画面を動かして自分でテストしてと。</p>
@@ -478,13 +505,28 @@ body {
 <p>[00:15:14]</p>
 <p>**青木**: に代わりに画面を動かしてやらせるってなった場合に、そういう指示をするとMCT使っていい？って聞かれると思うんですけど、使っていいよって答えてあげてください。はい。</p>
 <p>**青木**: MCTってなんだろ？と思った人はチャットGPTに聞いてください。</p>
+    </div>
   </div>
 </div>
 
 <div class="doc-footer">
-  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 02:43
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 03:43
 </div>
 
 </div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
 </body>
 </html>
