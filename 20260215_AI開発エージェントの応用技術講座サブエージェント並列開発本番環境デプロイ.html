@@ -296,22 +296,6 @@ body {
   font-size: 0.9em;
 }
 
-.transcript-toggle {
-  cursor: pointer;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-size: 0.9em;
-  font-weight: 500;
-  margin-bottom: 12px;
-}
-
-.transcript-toggle:hover {
-  opacity: 0.9;
-}
-
 .transcript .speaker {
   font-weight: 700;
   color: var(--primary);
@@ -321,6 +305,45 @@ body {
 
 .transcript p {
   margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
 }
 
 /* フッター */
@@ -355,11 +378,11 @@ body {
     </div>
     <div class="meta-item">
       <span class="meta-label">話者</span>
-      <span class="meta-value">青木（講師）, Speaker B, Speaker C, Speaker D, Speaker E</span>
+      <span class="meta-value">Speaker A</span>
     </div>
     <div class="meta-item">
       <span class="meta-label">前川の立場</span>
-      <span class="badge badge-role" style="background:#ea4335;">聴講者</span>
+      <span class="badge badge-role" style="background:#666;">不明</span>
     </div>
     <div class="meta-item">
       <span class="meta-label">カテゴリ</span>
@@ -367,7 +390,7 @@ body {
     </div>
     <div class="meta-item">
       <span class="meta-label">タグ</span>
-      <span class="meta-value"><span class="badge badge-tag">AI開発</span> <span class="badge badge-tag">エージェント</span> <span class="badge badge-tag">サブエージェント</span> <span class="badge badge-tag">並列開発</span> <span class="badge badge-tag">Cursor</span> <span class="badge badge-tag">Claude</span> <span class="badge badge-tag">エージェントチーム</span> <span class="badge badge-tag">GitHub</span> <span class="badge badge-tag">Googleクラウド</span> <span class="badge badge-tag">CLI</span> <span class="badge badge-tag">本番環境</span> <span class="badge badge-tag">デプロイ</span></span>
+      <span class="meta-value"><span class="badge badge-tag">AI開発</span> <span class="badge badge-tag">エージェント</span> <span class="badge badge-tag">サブエージェント</span> <span class="badge badge-tag">並列開発</span> <span class="badge badge-tag">Cursor</span> <span class="badge badge-tag">Claude</span> <span class="badge badge-tag">エージェントチーム</span> <span class="badge badge-tag">GitHub</span> <span class="badge badge-tag">Googleクラウド</span> <span class="badge badge-tag">CLI</span> <span class="badge badge-tag">本番環境</span> <span class="badge badge-tag">デプロイ</span> <span class="badge badge-tag">OPUS</span> <span class="badge badge-tag">Codex</span> <span class="badge badge-tag">モデル切替</span> <span class="badge badge-tag">エラー修正</span> <span class="badge badge-tag">開発効率化</span></span>
     </div>
   </div>
 </div>
@@ -412,8 +435,12 @@ body {
 
 <div class="section">
   <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
-  <div class="transcript">
-    <p>**Speaker A**: The fit for you. Please be sure. The same screen on the other day, new agent to press the high-cutter home. I have another holder on the other screen on the top row, of course, so go just go on the top row. So then, another window with a this. Please be sure. And the new window, another new window goes up and the menu bar will be displayed. The menu bar will be displayed. Yeah, it will. And then、</p>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <p>**Speaker A**: The fit for you. Please be sure. The same screen on the other day, new agent to press the high-cutter home. I have another holder on the other screen on the top row, of course, so go just go on the top row. So then, another window with a this. Please be sure. And the new window, another new window goes up and the menu bar will be displayed. The menu bar will be displayed. Yeah, it will. And then、</p>
 <p>そうするとまた一番最初の画面に戻ってオープンフォルダみたいになるので、オープンファイルみたいになるんで、これ必ず設定してください。</p>
 <p>で、次、必ず毎回新しいの作ったら、必ずもう1回GitHubにつないで新しいフォルダ作る。新しいデポ、デストリボ作る。</p>
 <p>[00:00:51] 必ずこの作業をしてから要件定義をするっていうのだけ覚えてください。一番最初にやってもらうと思います。</p>
@@ -468,13 +495,28 @@ body {
 <p>なので、治らないときはCodex 5.3に切り替えるというのをやってみて。</p>
 <p>という感じで、またとりあえずまた開発進めていって、分かんないことあった聞いてください。はい。</p>
 <p>まあ次、4日ぐらいにまたちょっと状況を聞きつつ、はい、進捗状況に合わせて、ちょっとまた追加シェアしようかなと思います。</p>
+    </div>
   </div>
 </div>
 
 <div class="doc-footer">
-  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 02:47
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 03:43
 </div>
 
 </div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
 </body>
 </html>
