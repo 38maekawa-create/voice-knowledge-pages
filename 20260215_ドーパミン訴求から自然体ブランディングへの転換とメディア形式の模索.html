@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ドーパミン訴求から自然体ブランディングへの転換とメディア形式の模索</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>ドーパミン訴求から自然体ブランディングへの転換とメディア形式の模索</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年02月15日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">14分8秒</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">Speaker A(前川と推定), Speaker B(リカ君/リクヤくんと推定)</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#666;">不明</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">teko</span> <span class="badge badge-cat">philosophy</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">ドーパミン訴求</span> <span class="badge badge-tag">ブランディング</span> <span class="badge badge-tag">自然体マーケティング</span> <span class="badge badge-tag">YouTube戦略</span> <span class="badge badge-tag">コンテンツ形式</span> <span class="badge badge-tag">ドキュメンタリー型</span> <span class="badge badge-tag">キャラクターメディア</span> <span class="badge badge-tag">匿名メディア</span> <span class="badge badge-tag">CVR</span> <span class="badge badge-tag">認知拡大</span> <span class="badge badge-tag">顧客獲得</span> <span class="badge badge-tag">事業継続性</span> <span class="badge badge-tag">メディア戦略</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>過激なドーパミン訴求による販売は短期的に売上が立つが事業として持続せず、自然体で選ばれるブランド構築への転換が必要だが、その過渡期は売上が落ち込み苦しい</li>
+<li>X(旧Twitter)界隈ではドーパミン的訴求にヘイトが溜まっており、匿名メディアだけでなくキャラクターメディアにも投資が必要</li>
+<li>座学型から脱却し、情熱大陸やガイアの夜明けのようなドキュメンタリー型、密着型、バーでのインタビュー形式など新しいコンテンツ形式を模索中</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>ドーパミン訴求の限界と自然体ブランディングへの転換</h3>
+<p>Speaker Aは、過激なドーパミン訴求で短期的に売上は立つものの、事業として持続できないと指摘。自然体で選ばれる状態を作る必要があるが、この転換期は顧客獲得数が減り、CVR(コンバージョン率)も悪化する。理性的に判断して入ってくる顧客は少数だが、認知のパイを広げないと以前のような売上は出ない。ドーパミン訴求を続けると事業自体が枯れてしまうリスクがある。</p>
+<h3>転換期の苦しさと中長期視点</h3>
+<p>現在は売上の落ち込みを感じながら、金銭支出は増え、売上に直結しない土台作りをしている相当苦しい時期。しかし半年後にはドーパミンで反応していた人は正気に戻り、強烈なアンチになる可能性もある。X界隈ではドーパミン的訴求にネガティブなヘイトが溜まっており、より実施が難しくなっている。</p>
+<h3>メディア戦略の再構築</h3>
+<p>匿名メディアだけでなく、キャラクターメディアにも資金をかけて育てる必要性を認識。YouTubeのプロパーやキャラクターメディアをしっかりやらないと先細りになる。レイバンさんのような商材系YouTubeはドーパミン系が強く厳しいと分析。同じ動画でもバキバキのエンタメ系とは種類が違う。</p>
+<h3>新しいコンテンツ形式の模索</h3>
+<p>2年前から座学型は限界と感じており、フロントの形式を変える必要性を認識。Vlog系など形式を変えることは必須。中野さんの車内撮影、青汰さんのVTRなど参考事例を検討。情熱大陸、ガイアの夜明け、カンブリア宮殿、ピボットのようなドキュメンタリー型がターゲット層(テレ東系コンテンツを好む層)にマッチすると分析。仕事密着や「家について行っていいですか？」のような企画も検討。転職支援事業を始めれば企業とタイアップした密着コンテンツも可能になる。バーでのインタビュー形式(オーセンティックバーでの対話)なども面白い選択肢として議論。</p></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>過激な感じでドーパミン訴求すれば売れるが続かない。自然体で選んでもらえる状態を作らないと事業として維持拡大できない</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker B</strong><br>半年は一年後死んでみる。正気に戻ってそれは強烈なアンチになる</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>Xの界隈とか見てるとドーパミン的な訴求に対してネガティブなヘイトが溜まってる。よりやりづらくはなってる</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>匿名のメディアも金かけて育てるのもしないといけないけど、キャラクターメディアもちゃんと金かけてやっていかないと結構先細りだな</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>座学型みたいなのって2年前ぐらいからもう違うなと思ってて。形式を変えるのは絶対必須</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>情熱大陸とかガイアの夜明けみたいなドキュメンタリー型。ターゲット層的にはテレ東系のコンテンツを好んでる層</div>
+</div>
+
+
+
+
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <p>**Speaker A**: 過激な感じでドーパミン訴求すれば売れるじゃないですか、売上が立つじゃないですか。でもそれって続かないし、寿命がやっぱり限られているから。</p>
+<p>いかにそういうドーパミンを刺激して売るんじゃなくて、フラットな自然体で選んでもらえるっていう状態を作らないと、事業として維持拡大できないから。</p>
+<p>でここの転換って一番顧客がつかないタイミングですからね。やっぱこの自然体でつくお客さんって限られるじゃないですか。</p>
+<p>**Speaker B**: 実際には別に普通的に手を振り払ってもいいんだから。僕のむちゃくちゃ現場で聞かれる、内なる手で引っ張るんですけど。目には見えない手で引っ張る。</p>
+<p>**Speaker A**: 本当にブランドだったりとか、本当理性でその人の発信だったりを見て合理的に考えていいなっていう風に思って入ってくる感じになるから。</p>
+<p>どうしても数は少なくなっちゃうし、その分やっぱ認知のパイを取らないと前みたいな売上げって出ないじゃないですか。CVの率で言ったら悪くなるんで。</p>
+<p>ドーパミン訴求でやりすぎるとさっきのリクヤくんのメディアも枯れるっていうのもそうなんですけど、事業としては枯れちゃうから。</p>
+<p>**Speaker B**: 仕方ないのが母数を増やすそうですけど。</p>
+<p>**Speaker A**: 刺激的な良さそうっていうので客付けしちゃうと、反応させて売るみたいな感じになっちゃうから。</p>
+<p>**Speaker B**: ボタン押させてるんですか？</p>
+<p>**Speaker A**: そうそうそう。</p>
+<p>**Speaker B**: 手を抜いて。じゃないんだ。</p>
+<p>**Speaker A**: これから今まさにそこの売上げのへこみを感じつつ、でもこの割に合わないことっていうので金支出は増えつつ、まだ売上げにダイレクトに直結しない土台作りをしつつっていうので相当苦しいなって思いながらね。でもそうしないと続かないし。</p>
+<p>**Speaker B**: そうっすね。半年は一年後死んでみる。</p>
+<p>**Speaker A**: そうそうそう。結局半年後にね、ドーパミンで反応している人ってどんどん少なくなってっちゃうから。</p>
+<p>**Speaker B**: 正気に戻るんですから。人間良くできてる。正気に戻ってそれは強烈なアンチになるんですから。</p>
+<p>**Speaker A**: 特に今のXの界隈とか見てるとすごくそういうドーパミン的な訴求に対してネガティブなヘイトが溜まってるじゃないですか。よりやりづらくはなってますよね。</p>
+<p>**Speaker B**: 枯れ安くするし、枯れ安いっす。</p>
+<p>**Speaker A**: だからまぁやっぱ金がかかっても発信の面を増やしたりしていかないと。</p>
+<p>**Speaker B**: また売りそうなポップになります。無理だ。だからなんか単発でバゴーン。</p>
+<p>**Speaker A**: そう考えるとこの匿名のメディアも金かけて育てるのもしないといけないけど、キャラクターメディアもちゃんと金かけてやっていかないとなっていうのは今話してて思いましたね。YouTubeのプロパーとかキャラクターのメディアもちゃんとやっていかないと、結構先細りだなっていう。</p>
+<p>**Speaker B**: 近時タイム抜いてるっすよね。</p>
+<p>**Speaker A**: だからねレイバンさんとか結構そっちの商材系のYouTubeだからあいつドーパミン系強いじゃないですか。あれはきついなと思ってて。</p>
+<p>**Speaker B**: どっちかって言うとこれは動画メインソック系ではあるものだけど、動画にも種類が違うというか。バキバキのエンタメじゃないですかあの人のチャンネル。そこは立ち筋だなっていうか一緒。同じ動画でもその種類が全然違うなっていう。</p>
+<p>あれはすごくなんか唯一のものすごいチャンネルだなって思いますし。まだできないですかね、お前。できないかいね。有用代行入ったら真剣度の無さは尋常じゃないっすね、みたいな。</p>
+<p>オフィスに来てて。話一生うちのメンバーと組織構造しゃべってました。僕と一緒にしゃべってます。</p>
+<p>**Speaker A**: 彼のフロントの形式をズラすっていうのは僕ももともと考えてたところだったのでそこは結構思考が一緒だなと思ってて。いわゆる座学型みたいなのって2年前ぐらいからかな、僕はもう違うなと思ってて。そういう意味でどういうその形式、それこそ彼ってVlog系だったりとかそういうちょっと形式を変えてるじゃないですか。あれは絶対必須だなと思ってて。</p>
+<p>**Speaker B**: 2年前僕もぶつかったんですよ。そもそも本当に、まだ実際こういう感じで2人との限界がもう見えててやばい。何しても取れないからね。絶望してたもんね。</p>
+<p>**Speaker A**: だからなんかAさんのキャラクターメディアをやっていくにしても、そういう語り系みたいな感じっていうよりもちょっと密着要素があったりとか、そういう形式は絶対変えたいなと思ってて。</p>
+<p>中野さんが車の中で撮ってたりするんですけど、割とそういうのをもっと映像シーンを増やすようなイメージだったりするんですけど。その中に有益なティップスになるような情報をまず込んでいくみたいな。青山さんのVTRとかもなさそうな一つだなと思って形式を変えるときに。</p>
+<p>**Speaker B**: あ、そうっすね。</p>
+<p>**Speaker A**: って考えたときになんかじゃあプロパーっていうキャラクターメディアの形式って何が適してるんだろうとか。そうそうそうそう。とかじゃあテコっていうチャンネルでできる形式って何なんだろうなっていうのはすごい考えてますね。</p>
+<p>それで1個考えたのが僕の中でちょっと情熱大陸とかガイアの夜明けみたいなドキュメンタリー型みたいな感じの形式を1個考えたところだったんですけど、やっぱここは層的にはマッチしていると思ってて。ターゲット層的にはやっぱそういうどっちかというとそのテレ東系じゃないですか。そういうところで出しているようなカンブリア宮殿とかガイアの誘惑とかそういうコンテンツを好んでる層だと思ってるんですよ。とかピボットとかリアルバリュー。リアルバリューちょっと中身が下品なんであれですけど。</p>
+<p>**Speaker B**: リアルバリューせっかくいいメンバー引っ張ってきてるのにもうちょっとなんかやりようないのかなと思ったりしますよね。</p>
+<p>**Speaker A**: 形式で言ったらああいうの好きじゃないですか。あとはあれなんだっけ名前出てこないけど。あれも確か水口さんがやってたのかな。なんか起業家系の番組の、なんだっけ名前出てこないけど。愛がついたような気がする。愛ついてないかな。</p>
+<p>水口さんで検索したら出てくるかな。水口さんじゃないのかなあれ。なんだっけ。ミクニさんとか出てたような気がするんだけどなんだっけあれ。ノンタイトルだそう。</p>
+<p>こういうような形式は絶対好きだなと思ってて。こういうところの形式をうまく自社に入れていけたらなと思って。だからなんかもっと本当にガイアに寄せるとかとかなんかあるんでしょうね。</p>
+<p>**Speaker B**: 気持ちいいな。それが伝わるんですよ。</p>
+<p>**Speaker A**: そうですね。</p>
+<p>**Speaker B**: だから全然いけずないのでインタビューして出てくるやつ出てくるじゃないですか。それとかめっちゃ地味な、え、みたいな。僕のアパートなんでとか。そうなんか面白そうやない。</p>
+<p>**Speaker A**: うんうんうんうん。</p>
+<p>**Speaker B**: いろんな人見れるじゃない。見れるし。</p>
+<p>**Speaker A**: 間違いない。今日はですね、なんか本当だから仕事密着とかできたらいいんですけど。家を、家について行っていいですか？とかね、そういうのもすごくいい企画であるんで、できたらいいんですけど。</p>
+<p>**Speaker B**: 最新機種のリスト？</p>
+<p>**Speaker A**: そう、なかなかねメンバーのこの家へ帰ったりとか難しいんで。職場、仕事について行くのもやっぱ無理なので。もっとなんかこう転職支援とかやるようになったらそういうのも企業とタイアップしてできるようにはなるだろうなと思ってるんですけど。</p>
+<p>うちのリソースでどんな形式ができるんだろうっていう、本当に。</p>
+<p>**Speaker B**: こういうの面白いなと思ったんですよね。お花いじりというのなんですけど。バーなんですよ、バー。でこうバーテンと喋ってるっていう。しゃべるのもあるんです。これ川本さん。</p>
+<p>**Speaker A**: 加茂さんですね。</p>
+<p>**Speaker B**: なんかやっぱ飲んでるんで、途中から若干テンションが上がって。っていうのはちょっと面白くて。オーセンティックバーみたいなところで。</p>
+<p>**Speaker A**: これでもインタビュー、これありかも。インタビューこのオーセンティックですか。</p>
+<p>**Speaker B**: オーセンティックバーみたいなちょっとなんかオシャレなバーみたいな、ちゃんとしたお酒が出てくるバーみたいな。</p>
+<p>**Speaker A**: お、歌舞伎さん。インタビューも確かにこんな感じに変えてもいいかも。</p>
+<p>**Speaker B**: 今日のキャラ。</p>
+<p>**Speaker A**: あれ？出てこないなぁなんてだろう。リカ君もう一回チャンネル見せてもらってもいいですか？</p>
+<p>**Speaker B**: カラリズミ。</p>
+<p>**Speaker A**: アハハ。</p>
+    </div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 05:41
+</div>
+
+</div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
+</body>
+</html>
