@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIツール開発プロジェクト発表会 - 実用的な業務自動化ツールの成果報告</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.transcript-toggle:hover {
+  opacity: 0.9;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>AIツール開発プロジェクト発表会 - 実用的な業務自動化ツールの成果報告</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年02月15日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">27分7秒</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">Speaker A, Speaker B, Speaker C, Speaker D, Speaker E, Speaker K</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#ea4335;">聴講者</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">external</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">AI開発</span> <span class="badge badge-tag">業務自動化</span> <span class="badge badge-tag">ツール開発</span> <span class="badge badge-tag">キーワード分析</span> <span class="badge badge-tag">SNS運用</span> <span class="badge badge-tag">動画制作</span> <span class="badge badge-tag">価格最適化</span> <span class="badge badge-tag">ハルシネーション</span> <span class="badge badge-tag">実用化</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>複数のメンバーがAIを活用した業務自動化ツールの開発成果を発表するセッション</li>
+<li>ホットペッパー用キーワード分析、SNS投稿生成、動画制作管理、レストラン予約自動化、レンタルスペース価格最適化など多様なツールが披露された</li>
+<li>実用段階に達したツールと開発途中のツールが混在し、ハルシネーションやエラーなどの課題も共有された</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>セッション概要</h3>
+<p>複数の開発者が自社で開発したAIツールのデモンストレーションを行うプロジェクト発表会。各メンバーが実務で必要とされる業務自動化ツールを開発し、その進捗と実用性について報告。</p>
+<h3>ホットペッパービューティー向けキーワード分析ツール（Speaker A）</h3>
+<p>キーワードベースの設計で、競合ベンチマーク機能を実装。営業担当から提示される月間キーワードランキングに基づき、自社と他社のキーワード対応状況を可視化。集客経路の最適化を目的とした戦略ツールとして開発中。毎日の情報収集とレポート機能はまだローカル環境にあり移行作業中。</p>
+<h3>SNS関連ツール開発の試行錯誤（Speaker D）</h3>
+<p>Threadsのバズ投稿分析ツールを開発したが、AIのハルシネーションにより存在しないアカウントを生成する問題が発生。ロングリサーチツールも開発したが、ローカル環境では動作するがクラウド環境で検索機能が不安定。一方、マニュアル自動生成ツールは実用段階に到達し、テンプレートから自動作成＋改善提案＋Googleドライブ連携まで実装。</p>
+<h3>X（Twitter）投稿生成ツール（Speaker E）</h3>
+<p>バズっている投稿を分析し、サンプルアカウントのプロフィールURLから投稿を取得。ジャンル（健康など）を指定すると、思想系とノウハウ系に分類して10個ずつ投稿案を生成。30日分の一括生成機能とダウンロード機能も実装。</p>
+<h3>動画制作運用管理アプリ（Speaker E続き）</h3>
+<p>Google環境で完結する動画制作の統合管理システム。台本管理、撮影素材管理、クライアント管理、メンバー管理を一元化。権限分離により外注スタッフも含めた複数メンバーで運用可能。初心者ディレクターでも分析と改善アクションができる仕組みを目指して開発中。</p>
+<h3>レストラン予約自動化ツール（Speaker B関連）</h3>
+<p>「おまかせ」などの予約困難店のキャンセル枠を20-30秒で自動検知。ウェブサイト上の通知より早く空席情報をキャッチし、人がクリックする前にシステムで察知する仕組み。RSSのような動作で実装。</p>
+<h3>歌詞カード自動生成ツール（Speaker C）</h3>
+<p>ボイストレーニング教室向けに、曲名とアーティスト名から歌詞を自動取得し歌詞カードを生成。エディター機能で分割や装飾も可能。競合の解説動画から歌詞カードをモックアップとして生成する機能も開発中だが処理が重く固まる課題あり。コメント分析機能も構想中。</p>
+<h3>太陽光・蓄電池販売用シミュレーションツール（Speaker B続き）</h3>
+<p>住所から電力会社と電気使用量を自動予測。世帯人数、居住年数、将来の電気使用量予測を入力すると、グラフで電気料金の変化を可視化。電気自動車の有無も考慮。パネル資料とシミュレーションデータを統合したファイル出力機能により、顧客への提案資料を自動生成。</p>
+<h3>レンタルスペース価格最適化ツール（Speaker K）</h3>
+<p>レンタルスペース運用で競合の予約状況と価格を分析し、自動的に料金を調整。株のトレードのように常に数字を監視する手間を削減。インスタベースに自動ログインし、価格修正の指示まで自動実行。実際に価格変更の実績あり。</p></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[00:00:03]</span> <strong>Speaker A</strong><br>ホットペッパービューティーはキーワードベースの設計で、キーワードの量と相関が結果に影響。月間キーワードランキングで集客数が変わるため、そのキーワードで実際に表示できているかが重要</div>
+<div class="quote-block"><span class="timestamp">[00:04:58]</span> <strong>Speaker D</strong><br>マニュアル自動生成ツールはテンプレートから作成し、改善提案もしてくれる。Googleドライブで開くと自分のテンプレート形式で出力される。実用レベルに到達</div>
+<div class="quote-block"><span class="timestamp">[00:08:30]</span> <strong>Speaker E</strong><br>Xのバズ投稿を分析し、ジャンル（健康など）を入れると思想系とノウハウ系に分けて10個ずつ投稿案を生成。30個分の一括生成とダウンロードも可能</div>
+<div class="quote-block"><span class="timestamp">[00:12:41]</span> <strong>Speaker E</strong><br>動画制作の統合管理アプリで台本、撮影素材、クライアント、メンバーを一元管理。初心者ディレクターでも分析と改善アクションができる仕組みを目指す</div>
+<div class="quote-block"><span class="timestamp">[00:15:34]</span> <strong>Speaker B関連</strong><br>予約困難店のキャンセル枠を20-30秒で自動検知。ウェブサイト上の通知より先にシステムで空席を察知する</div>
+<div class="quote-block"><span class="timestamp">[00:21:53]</span> <strong>Speaker B</strong><br>太陽光・蓄電池販売で住所から電力会社と電気使用量を予測。世帯人数や将来の使用量でグラフが動き、シミュレーションとパネル資料を統合して顧客に提案</div>
+<div class="quote-block"><span class="timestamp">[00:26:24]</span> <strong>Speaker K</strong><br>レンタルスペースの価格を競合の予約状況と金額から自動最適化。インスタベースに自動ログインして価格修正まで実行</div>
+</div>
+
+
+
+
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <div class="transcript">
+    <h4>整形済み会議テキスト</h4>
+<p>---</p>
+<h4>[00:00:03] プロジェクト発表セッション</h4>
+<p>**Speaker A**: ホットペッパービューティーはキーワードベースの設計だったので、キーワードを多く入れるほど、そしてキーワードの相関が強いほど、結果に影響が出るようになっていました。それが良いかどうかはまだわかりませんが、より効率的な設計にしたいと考えています。</p>
+<p>まずキーワード設計について、情報を取得する機能も実装しています。ここで競合をベンチマークとして追加できるようにしています。</p>
+<p>企業に対して、ホットペッパーで実際にやるときは営業担当から月間のキーワードランキングのようなものが提示されます。そのキーワードランキングで集客経路の集客数がかなり変わってくるので、そのキーワードで実際に表示できているかどうかが重要なんです。そこでそのキーワードをここに入れています。</p>
+<p>[00:01:23] 例えば狙いたいキーワードを入れると、自社がそのキーワードに対してどのぐらい今狙えているのか、そして他社がそのキーワードに対してどのぐらいページで作っているのかが表示されます。そこから戦略を練っていく感じですね。</p>
+<p>キーワード戦略を使っていく形になります。</p>
+<p>[00:02:06] レポートに関しては、毎日情報収集して変更した結果が毎日のようにレポートが出るような形になるので、まだ表示されていません。作り込んでいたら移行ができなかったので、まだローカル上にあるという感じです。</p>
+<p>以上です。</p>
+<p>---</p>
+<p>**Speaker B**: お疲れ様です。</p>
+<p>**Speaker C**: ちょっと一人飛ばしてもらっていいですか？今エラーが出てるので。</p>
+<p>**Speaker B**: じゃあ今野さんから行っちゃいますか？</p>
+<p>---</p>
+<p>**Speaker C**: タイミングがあります。</p>
+<p>**Speaker A**: なんか2つは中途半端で、あまり使い物になるのかな？</p>
+<p>**Speaker B**: 全然できたと思うでしょう。こんなことチャレンジしてました。</p>
+<p>**Speaker A**: じゃあチャレンジしてたのと、1個今表示してるのはワンチャンいけそうだっていう感じで、実用でいけそうな感じなんです。</p>
+<p>ちょっとThreadsでバズってるやつを一覧で出して、自分はこんなのやってるからどういうのだったら伸びやすいみたいなのをちょっと作ろうと思ってたんですけど、これが全然存在しないアカウントとかを空で作り始めたりして乗っちゃって、びっくりしたんです。</p>
+<p>急に創作し始めて、これもお前とか付いてるのにこんなについてるんだと思ったら「存在しません」とか。めっちゃ久しぶりにハルシネーションっていう言葉を思い出しました。こんなことあるんだと思って、ちょっと使えないなと思いました。</p>
+<p>---</p>
+<p>**Speaker D**: もう一個はロングリサーチ的なものだと思ったんですが、悩みや課題とかが出てくる全部のウェブ情報を全部調べて、そこからインサイトのヒントとかを揉んでいくというのを作ってたんですけど、これもちょっと嘘っぽいというか。</p>
+<p>すごくなんか若干、エラーも起こっちゃうし。ローカルだとちゃんと検索してくれてたんですけど、YouTubeの動画とか、本番環境に出したら一個もないので調べませんでしたみたいな感じで言われちゃって。ここのところがちょっとまだ使えないんです。</p>
+<p>もう一個がマニュアルを作ってたりするんですけど、マニュアル毎回作るのめんどくさいなと思ってて。</p>
+<p>[00:04:58] ここに、例えばテンプレートがスライドにあるとして、ここに入れると、こんな感じで一旦作ってくれます。ちょっとこれ一旦問題ないよねっていう前提でいくんですけど、「ここもっとこうしたほうがいいんじゃない？」とか、「ここも足してみたら？」みたいな感じで、改善提案もしてくれるんです。</p>
+<p>[00:06:00] 選が追加できるというところまでやって、これをGoogleドライブで開くと、自分が持ってるテンプレートの感じでこんな感じで作ってくれるみたいな。</p>
+<p>ちょっとこのシステムの精度をもう少し上げたいんですけど、まだ戦ってます。かなり近くなってきてて、実用でいけると思うんです。これは結構便利なものになると思います。</p>
+<p>作ったって感じです。</p>
+<p>---</p>
+<p>**Speaker B**: お疲れ様です。実用できそうなのめっちゃいいですね。マニュアルとか確かにね、まだ欲しいテンポありますもんね。</p>
+<p>**Speaker C**: ちょっと一人飛ばしてもらっていいですか？今エラー出てる。</p>
+<p>**Speaker B**: じゃあ今野さんから行っちゃいますか？</p>
+<p>---</p>
+<p>**Speaker D**: 僕は減ってないんですよ。同期が考えてくれた人がいるんですよ。</p>
+<p>---</p>
+<p>**Speaker E**: 私はTwitter、Xのバズってる投稿を切り出して新しい表現とかを調べて、サンプルアカウントのプロフィールURLをここに入れたら、基本的にはタイトルとバズっている投稿を取得してくれます。</p>
+<p>[00:08:30] そこにキーワード、まあジャンル、私のジャンルは健康なので健康というふうに入れたら、つぶやきを思想系のマインド系みたいな考えみたいなのと、ノウハウとかを出してくれるんです。今回ちょっと両方で生成できるようになっていて、キーワードを入れて両方で生成する、AIで生成するというと、それぞれ参考にして10個ぐらいに分けて出してくれるというところを作りました。</p>
+<p>[00:09:02] 後は下からの流動とかで、バズってる投稿、例えばその30日分とか30個分とか作ってくれる一括生成っていうのを作りました。</p>
+<p>ここで30個作ってくれたもの全部が出てきて、これも同じく思想とノウハウで別れて出てくるという形と、それをダウンロードできるという形になっています。</p>
+<p>---</p>
+<p>**Speaker B**: お疲れ様です。ありがとうございました。面白い、結構実用的な話ですね。実用的だと思うんですよね。</p>
+<p>**Speaker C**: いや、実在なバグが出るんですね。</p>
+<p>**Speaker B**: APIの服をプログラマーが切ったら。</p>
+<p>---</p>
+<p>**Speaker B**: じゃあ、ななおとさん行きます？お願いします。</p>
+<p>---</p>
+<p>**Speaker E**: デベロッパーたちが一括してこの運用アプリで、Googleで完結するような仕組みを作りました。</p>
+<p>[00:12:41] 画面上まだ一つしか入れてないんですけど、十何個あるのでちょっと少しずつ入れていきたいなと思っています。</p>
+<p>ここが台本が紐付けされていて、撮影素材がここに入ってくるような仕組みになってまして、クライアントさんごとに名前が入ってまして、投稿管理とクライアントさんの管理とメンバー管理があります。</p>
+<p>[00:13:21] ここら辺はまだやってないんですが、分析が一気にできて、ディレクターたちが広告をかけたりとか、次の改善アクションなどのどういうふうにやっていけばいいかっていうのが、これを見たら、まあ初心者のディレクターでもできるような仕組みにしたいなと思って、こういうツールを作っています。まだちょっといろいろ入れてないので中途半端になってます。</p>
+<p>以上です。</p>
+<p>---</p>
+<p>**Speaker B**: すごいですよ。それを複数のメンバーでログインして設計するってことですか？</p>
+<p>複数のメンバーが自分の担当するアカウントの素材とか情報とか全部ここに集約して、でも最後マスターの管理画面いくと全部見れるみたいな感じ？</p>
+<p>**Speaker E**: はい。そうです。権限をちょっと分けようかなと思っています。</p>
+<p>**Speaker B**: だから権限、外注スタッフ増えるとフォルダがみんな管理バラバラで、あとで共有し合うのとかだるいところも全部解決するみたいな。いいと思います。</p>
+<p>**Speaker C**: ありがとうございます。</p>
+<p>---</p>
+<p>**Speaker B**: 普段はGoogle内で開かれてるんですけど、Amazonの方は壮大すぎて全然引っかからなくて。すごい趣味の方なんですけど、「おまかせ」っていうレストランサイトとか知ってるかな？</p>
+<p>その予約困難店に行った時期があって、その時にこうだったらいいなっていうのをそのまま作ってみたんです。おまかせのウェブサイト上からもキャンセルとか空き枠が出たら通知が出るんですよ。</p>
+<p>[00:15:34] それを見てポチッと押した頃にはもう埋まってるっていうのが大半だったので、それよりも先にそれを察知して、キャッチして。システム上で空席が出たら、空席が出た後お店の人がメールを配信する、ポチッと押す前に先に検知したいみたいな。自分たちで作ってます。</p>
+<p>一応ここは20秒から30秒でこういう感じで選ぶような感じで。前のところ、行きたいなと思っているところ入れてみたんですけど、ちょっとまだ正直、そのキャンセルが本当にリリースされた時に通知が受け取れたのかっていうのは、RSSみたいな感じですね。</p>
+<p>---</p>
+<p>**Speaker B**: あげんさんはもう一個面白いの作ったんですけど、ちょっと表に出してはいけない。</p>
+<p>---</p>
+<p>**Speaker C**: 私はシンプルなツールを作りました。ボイストレーニング教室をやっているので、そういう人たちが歌詞カードづくりが一番めんどくさいんですよ。歌うのは一瞬でできるんですけど、その歌詞カードづくりがめんどくさいので。</p>
+<p>[00:19:16] 例えばなんかこういう感じで曲ができたら、こういう風に取得してもらって、アーティストの曲、あと歌詞もなんか著作権無視でいけちゃうんで、それでこれを流し込んでもらったら。</p>
+<p>[00:19:52] まだカバーしなきゃいけないクラックがあるんですけど、それでアップデートする必要があります。エディターはデザイン的な感じなので、例えばここで分けたいと思ったらこうなります。こういう風に釣りを入れたりとか。</p>
+<p>[00:20:14] で今実装しようとしてたのが、競合の方でこういうカードをもう出してるのを、もうモックアップをそれで作ってしまおうかなっていうところまでやろうとしたら固まりました。</p>
+<p>以上になります。</p>
+<p>---</p>
+<p>**Speaker B**: 競合の解説動画に上がってるこの歌詞カードを参考にこれをまたバババッと。</p>
+<p>**Speaker D**: それをバックアップも作ってくれて、そこからコメント分析でここでこういうコメントつけたらいいまでができたらいいっていう。データまでは引っ張ってこれるけど固まるんです。</p>
+<p>**Speaker B**: なるほど。</p>
+<p>**Speaker D**: はい、以上です。</p>
+<p>**Speaker B**: お疲れ様です。</p>
+<p>---</p>
+<p>**Speaker B**: ちょっと僕はその住宅用の太陽光とか蓄電池の販売をしてまして、いつもYouTubeで太陽光とか蓄電池って皆さん情報がなくて。</p>
+<p>[00:21:53] すごく簡単な話なんですけど、住所を取得できたら、電力会社がその住所から電気使用料を予測してくれて、電気コストを見えるところから取ってくれます。電気料金があれば、電力会社がそれを持っていて、人数があれば電力会社がそれを持ってるという形です。</p>
+<p>[00:22:36] で、後は何年住んでるかどうかとか、将来どれぐらい電気使いそうなのかっていうのをここで。</p>
+<p>[00:22:54] 人数を増減させると、これを選ぶと、台数に応じてグラフがこう動きます。そして電気料金が電気料金の変化に応じて変わっています。そしてちょっと見回すと、電気自動車が動いていたらそれは良いし、動いていなかったら良くない。</p>
+<p>それで全部グラフにまとめて、要約すると。それで実際のパネルについての資料もここにあります。</p>
+<p>[00:23:38] データと、今作ったシミュレーションを見て。ファイルがあります。できます。お客さんは非常に喜んでくれると思います。ファイルを開いて、データを作って、どうなっているかお伝えします。</p>
+<p>最初のお客さんも非常に喜んでくれると思います。ありがとうございました。</p>
+<p>---</p>
+<p>**Speaker D**: すごく良いスピーチですね。</p>
+<p>**Speaker F**: 高堀です。</p>
+<p>**Speaker A**: もうダイニングキッチンを見つけました。美味しいです。来てください、大丈夫です。</p>
+<p>---</p>
+<p>**Speaker H**: これ9時まで延長できたりします？</p>
+<p>**Speaker A**: お隣の方では撮影が案件が入っちゃってるんで。</p>
+<p>**Speaker H**: 静かにやったらいけます？</p>
+<p>**Speaker A**: ロック禁止。</p>
+<p>**Speaker H**: 静かに？じゃああと10〜15分ぐらいってもいいですか？</p>
+<p>**Speaker A**: お隣の部屋とかでできませんか？ちょっと部屋を移していただくのは難しいですか？</p>
+<p>**Speaker H**: 今から、あと隣に。プロジェクターが必要です。プロジェクターだけ。</p>
+<p>**Speaker J**: あれ？間違った時間に行っちゃった？もう終わり？</p>
+<p>---</p>
+<p>**Speaker H**: しょうがないね。リプロイの方やってないので管理係の方にやります。</p>
+<p>私はレンタルスペースの運用を今月から始めることになったんですけど。</p>
+<p>[00:25:45] レンタルスペースの金額って結構ダイナミックにこう動かしていくみたいで、競合のスペースの予約状況とか金額によって結構細かく変えていくみたいですね。</p>
+<p>---</p>
+<p>**Speaker K**: ですけど、株のトレードみたいにこうずっと数字見てても時間取られるだけなので、それを自動化できたらいいなと思って、近隣号の予約状況と金額から自動的に料金変えてくれるサービスを作りました。</p>
+<p>[00:26:24] ここで今、価格の直接で修正してって言われてるんですけど、そしたらもうインスタベースっていうサイトに自動でログインしてくれて、修正の指示まで出してくれるようになって。</p>
+<p>一応今日さっき変えたところが、最初この金額形態になってたところが変わりました。</p>
+<p>以上です。</p>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 03:28
+</div>
+
+</div>
+</body>
+</html>
