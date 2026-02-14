@@ -296,22 +296,6 @@ body {
   font-size: 0.9em;
 }
 
-.transcript-toggle {
-  cursor: pointer;
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 8px;
-  font-size: 0.9em;
-  font-weight: 500;
-  margin-bottom: 12px;
-}
-
-.transcript-toggle:hover {
-  opacity: 0.9;
-}
-
 .transcript .speaker {
   font-weight: 700;
   color: var(--primary);
@@ -321,6 +305,45 @@ body {
 
 .transcript p {
   margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
 }
 
 /* フッター */
@@ -359,7 +382,7 @@ body {
     </div>
     <div class="meta-item">
       <span class="meta-label">前川の立場</span>
-      <span class="badge badge-role" style="background:#ea4335;">聴講者</span>
+      <span class="badge badge-role" style="background:#666;">不明</span>
     </div>
     <div class="meta-item">
       <span class="meta-label">カテゴリ</span>
@@ -418,8 +441,12 @@ body {
 
 <div class="section">
   <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
-  <div class="transcript">
-    <h4>整形済み会議テキスト</h4>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <h4>整形済み会議テキスト</h4>
 <p>---</p>
 <h4>[00:00:03] プロジェクト発表セッション</h4>
 <p>**Speaker A**: ホットペッパービューティーはキーワードベースの設計だったので、キーワードを多く入れるほど、そしてキーワードの相関が強いほど、結果に影響が出るようになっていました。それが良いかどうかはまだわかりませんが、より効率的な設計にしたいと考えています。</p>
@@ -526,13 +553,28 @@ body {
 <p>[00:26:24] ここで今、価格の直接で修正してって言われてるんですけど、そしたらもうインスタベースっていうサイトに自動でログインしてくれて、修正の指示まで出してくれるようになって。</p>
 <p>一応今日さっき変えたところが、最初この金額形態になってたところが変わりました。</p>
 <p>以上です。</p>
+    </div>
   </div>
 </div>
 
 <div class="doc-footer">
-  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 03:28
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 03:43
 </div>
 
 </div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
 </body>
 </html>
