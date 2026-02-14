@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>富裕層向けファミリーオフィス事業の構造とメルマガプロモーション戦略</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>富裕層向けファミリーオフィス事業の構造とメルマガプロモーション戦略</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年02月15日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">2時間8分44秒</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">Speaker A, Speaker B, Speaker C, Speaker E, Speaker F, Speaker G</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#666;">不明</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">family_office</span> <span class="badge badge-cat">external</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">富裕層</span> <span class="badge badge-tag">プライベートバンク</span> <span class="badge badge-tag">ファミリーオフィス</span> <span class="badge badge-tag">メルマガ</span> <span class="badge badge-tag">ランサーズ</span> <span class="badge badge-tag">人材採用</span> <span class="badge badge-tag">ターゲティング</span> <span class="badge badge-tag">AI活用</span> <span class="badge badge-tag">コンテンツ制作</span> <span class="badge badge-tag">ストーリーテリング</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>富裕層向け金融サービスの事業構造について、Speaker Aが詳しく解説。プライベートバンクやファミリーオフィスは資産規模が数十億レベルでないと採算が合わないビジネスモデルであること、1〜3億程度の顧客層はサービス対象として中途半端な位置付けになることが語られた。</li>
+<li>Speaker Gの事業におけるターゲット層の見極めと、メルマガプロモーション戦略の議論。ミドル層以上の「酸いも甘いも知った」層が適切なターゲットであり、初心者層は反応しないことが実践を通じて判明。</li>
+<li>ランサーズでの人材採用が非常に効果的であること、中間管理職的な人材の必要性、AIを活用したメルマガコンテンツ制作の可能性などが議論された。毎日配信も現実的な選択肢として検討されている。</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>富裕層向け金融サービスの事業構造</h3>
+<p>Speaker Aが富裕層向け金融サービスの事業構造について詳細に解説。UBSなどのプライベートバンクを例に、2〜3億円の資産を持つ顧客から預かり手数料1%を取っても年間2,300万円程度にしかならず、100顧客抱えても年商2億円で給料を考えると採算が合わないビジネスモデルであることを説明。</p>
+<p>超富裕層向けには数百億〜数千億規模の顧客を対象とし、管理手数料0.5〜1%でも十分な収益が得られる。ただし、そのレベルの顧客はファミリーオフィスのヘッドがついているなどリテラシーが高く、不適切な提案をすれば即座に切られるリスクがある。</p>
+<p>1〜3億円程度の「富裕層」は一般的には金持ちだが、金融機関から見ると中途半端な顧客層で、手厚いサービスを提供するには採算が合わない。この層に対して真に顧客メリットを出せるFPは業界全体で10〜20人程度しかいないとの見解。年商5,000万円程度の個人FP事務所で、組織化せずに質の高いサービスを提供している例も紹介された。</p>
+<h3>ターゲット層の見極めとマーケティング戦略</h3>
+<p>Speaker Gの事業において、当初想定していた初心者層が実際には反応しないことが判明。実践を通じて、30代前半から40代中盤のミドル層以上、「酸いも甘いも知った」落ち着いた層が適切なターゲットであることが明らかになった。</p>
+<p>Speaker Gが作成するコピーは「検査の2」というレベルで洗練されており、その言葉遣いや言い回しに反応できる層は限られている。Speaker Aのキャラクターではリーチできないマーケットがあり、より初心者向けには秋さんのような別のキャラクターが必要との認識。</p>
+<p>Xの界隈では「何を言っているかより誰が言っているか」に反応する層がおり、中身の精査ができていない。年商3,000〜5,000万円のクライアントワーク中心の事業者でも、著名人に反応するタイプは「頭が弱い」との評価。</p>
+<h3>メルマガプロモーション戦略</h3>
+<p>AIを活用したメルマガコンテンツ制作の可能性が議論された。Speaker Gが5分程度の音声を録音し、それを文字起こししてAIで編集する手法で、質の高いステップメールを7通程度作成できることが実証された。</p>
+<p>従来はプロのライターに依頼していたが、AIを使うことでコストを抑えつつ一定の品質を保てるようになった。「ストーリーテリング+学び」の構造が効果的で、クライアント事例を話しながら学びを入れ込む手法なら、ストーリーは千差万別なのでネタに困らない。</p>
+<p>毎日配信も現実的な選択肢として検討されており、「変なこだわりを捨てれば」実現可能との認識。実際、同じような話を繰り返しても読者は気にしないという気づきもあった。</p>
+<h3>人材採用とチーム体制</h3>
+<p>ランサーズでの人材採用が非常に効果的であることが報告された。数を募集してトライアル発注を経て絞り込むオペレーションで、質の高い人材を低コストで採用できている。クラウドワークスと比較してもランサーズの方がコミュニケーション能力が高く、バランス感覚の良い人材が多い。</p>
+<p>写真カメラマンから元テレビ局勤務の映像クリエイターまで、幅広いレベルの人材が在籍しており、予算に応じて選択できる。</p>
+<p>事業の成長に伴い、中間管理職的な「バランス感覚の良い人材」の必要性が議論された。Speaker Gが現在手伝ってもらっている人物は、自社でスキル系講座を月300〜500万円売り上げながら暇なので手伝ってくれているという理想的なディレクター/PMタイプ。月商600万〜1,000万円が見えてきたら、そうした人材のアサインが不可欠との認識。</p>
+<h3>その他のトピック</h3>
+<p>YouTubeで広告収入だけで5,000万円稼ぐ「カスミさん」という農家の嫁の事例が紹介された。地方在住で家にいながらパソコンで作業し、無借金で高収益を上げているが、村八分を恐れて周囲には秘密にしているという。ObsidianなどのニッチなツールのYouTube講座も展開している。</p>
+<p>「ウルトラさん」という人物の近況も話題に。以前は受講生をプロデュースする側だったが、現在は自分の講座を積極的に販売するスタイルに転換している。</p></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[00:01:01]</span> <strong>Speaker A</strong><br>プライベートバンクで2〜3億円の顧客から手数料1%取っても年間2,300万円。100顧客で年商2億円でも、高給を払うと採算が合わない。数百億〜数千億規模の超富裕層でないとビジネスとして成立しない</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>真に顧客メリットを出せる個人FPは業界で10〜20人程度しかいない。年商5,000万円程度の1人事務所で、組織化せずに質の高いサービスを提供している</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker G</strong><br>年商3,000〜5,000万程度で山本隆に反応するようなクライアントワーク中心の層は、コンテンツの中身より誰が言っているかに反応する。中身の精査ができていない</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker G</strong><br>検査の言葉・言い回しは仕草が高いので、そこに反応する層は限られる。30代前半から40代中盤のミドル層以上、酸いも甘いも知った層がターゲット</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker B</strong><br>ランサーズでの採用が非常にうまくいっている。優秀で能力も高いのにコスト感も安い。数を募集してトライアル発注から絞り込むオペレーションが効果的</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker B</strong><br>ストーリーテリングに学びを入れていく手法が有効。クライアント事例を話しながら学びになることを伝える。ストーリーは千差万別なのでネタに困らない</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>YouTubeで広告収入だけで5,000万円稼ぐ農家の嫁（カスミさん）の事例。地方在住で家にいながらパソコン作業、無借金で高収益。村八分を恐れて秘密にしている</div>
+</div>
+
+
+
+
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <h4>整形済み会話テキスト</h4>
+<p>**Speaker A**: 結局その商売じゃないですか、シークター側からしても利益取れないとダメなんで。例えばプライベートバンクとかでも有名なのがUBSとか、スイスであって日本にもあるところなんですけど。</p>
+<p>**Speaker C**: そうなんですか、日本にもあるんですか。</p>
+<p>**Speaker A**: スイスで日本にもあるんですけど、じゃあ2、3億のお客さんが預けてくれる、15億ぐらい持ってて、例えば預かり手数料で1%取りましょうと言っても2,300万円しか取らないですよ。</p>
+<p>**Speaker C**: 知れてますね。</p>
+<p>**Speaker A**: そうそう。それを100社とか1人の担当で抱えたとしても2億の年間売り上げでしかならないじゃないですか。給料を3千万、5千万払わなきゃいけないとか、割に合わないじゃないですか。</p>
+<p>[00:01:01] **Speaker A**: じゃあそういうお客さんどうするんだと言ったら、利益率、手数料率高いものじゃないと、もしくは金額がないと1顧客あたりの単価って儲かんないじゃないですか。</p>
+<p>**Speaker C**: そうですね。</p>
+<p>**Speaker A**: ただ、セレブというか超一流のところだからいいってわけじゃなくて、逆にそこそこリテラシーがあるとか、ファミリーオフィスみたいなヘッドがいて顧客側にもついてて、証券の管理担当者としてプライベートバンク使うみたいなのがあるんですよ。やろうとかますに行ったら切られるじゃないですか、リテラシーの高い人だから。</p>
+<p>**Speaker C**: そうですね。</p>
+<p>**Speaker A**: ただ、チャームと対応するみたいな感じだけど、そういうサービス向いてないから、そんなに資産規模デカくないとそもそも相手にしない。相手にするメリットないじゃないですか。</p>
+<p>**Speaker C**: そうですね。</p>
+<p>**Speaker A**: だからそういう構造があって。日本橋のちょっと奥の方とかの、そういう富裕層に、日本人系でも日系でもそういう証券会社ってあるんですけど、そういった向けの講座もやってる。けど、普通のネット証券向けだけど、別にそっちってそんなに積極的に営業してるわけじゃないし、業界の人は名前知ってるぐらい。</p>
+<p>**Speaker A**: でも、超富裕層向けとかで、そういう数百億とか数千億とかのお客さんを抱えて、管理手数料でも年間1%も取らないけど、それだけデカいですもんね。100億の1%だったら1億、0.5%とか5,000万くらい。それのプラスで保険に入ったりとか、顧客目線のことをやってて発生するじゃないですか。</p>
+<p>**Speaker C**: そうですね。</p>
+<p>**Speaker A**: ただなるだけみたいな構図はあるから、なかなかやっぱり、通億でも普通考えたら富裕層というか。</p>
+<p>**Speaker C**: そうですね。</p>
+<p>**Speaker A**: 1億でも金持ちじゃないですか。</p>
+<p>**Speaker C**: 一般人からしたら、一般的に世の中的に見たらお金持ちですからね。</p>
+<p>**Speaker A**: それだけ余剰で収入やって貸し方が1億あったら、困ることないじゃないですか。人の人生がずっと続きます、数年くらいの生活水準をどうするかというと。</p>
+<p>**Speaker A**: けど、その富裕層に入ろうと思うとどこかにやっぱかませられるんで。そこのバランスをどうやって、僕一部、実力と人間性兼ね備わってる人って、個人FP事務所みたいな、そういう時にあんまり広げる気もないところがある。</p>
+<p>**Speaker C**: 別に今で不便はしてますからね。</p>
+<p>**Speaker A**: 年商5,000万くらいの1人事務所とかアシスタント、社員2人くらいのちっちゃい。</p>
+<p>**Speaker C**: まぁ広いってもそういう人たち大変になるだけですもんね、重くなる。</p>
+<p>**Speaker A**: コミュニケーションコストも重くなるし、それぐらいのコンサルティング能力のある人がいないですからね。</p>
+<p>**Speaker C**: だから組織化も難しいんで。自分がやってること再現性もたせて組織でできないから、じゃあもう自分一人でもある程度見れる範囲だけ。</p>
+<p>**Speaker A**: ショップラインの感じでちょっと任せガッツリだけやってくれる人だけ。</p>
+<p>**Speaker C**: なるほど。</p>
+<p>**Speaker A**: そういう人が10年以上この業界で見てて、10人、20人はいないよっていうか、会ったことある人とか一方的に認知している人とかいるんで。20人ぐらいしか多分いらっしゃらないから、多分世の中的にもいないんじゃないの。ちゃんとお客メリット出せる人。</p>
+<p>**Speaker A**: あとほらカマスは売り切れてる。</p>
+<p>**Speaker C**: かまかましに来てる。</p>
+<p>**Speaker A**: 俺はカマス嫌いけど。</p>
+<p>**Speaker C**: 無意識無自覚なんですね。</p>
+<p>**Speaker A**: そうそう、カマス嫌いって言ってる人もいるし。何もしないよりはいいでしょって感じだけど、僕とかが見ててちょっとあーって感じがする人はいっぱいいます。</p>
+<p>**Speaker A**: そんなポーズですかね。</p>
+<p>**Speaker E**: うん。</p>
+<p>**Speaker A**: うちもやろうと思ってもさ、5,000社抱えるとかはちょっと多分無理。それこそそういうサポート型のサービスだと多分ちょっと無理で、もうちょっと薄めた講座型みたいな感じでもう一回仕切り直さないとできないんだけど。</p>
+<p>**Speaker E**: うんうんうん。</p>
+<p>**Speaker A**: と局結局、自主努力してねっていう言っときゃし直さないといけないと思うんですけど。</p>
+<p>**Speaker A**: でもなんか昨日もちょっとインタビューしてて、割と具体的に何やるっていうところまで言って教えてあげたつもりでも、やっぱみんなパソコン教室してあげないとできないんだっていうのは改めて感じた。</p>
+<p>**Speaker C**: なるほど。</p>
+<p>**Speaker A**: 例えば何買ったらいいよってとこまで言うと思っちゃう。それが自分の場合に本当にその比率でいいのかみたいな疑問が。レターでも書いてましたけど、アクションとして事実やってないわけだから。</p>
+<p>**Speaker A**: なんとなく頭では知識としては知ってたけど実行につながってない人は多いんだろうな。</p>
+<p>**Speaker C**: うーん。</p>
+<p>**Speaker A**: 昨日の人とかね、カスミさんという人が、YouTubeで広告収入だけで5,000万くらいいくと思う。</p>
+<p>**Speaker C**: そのあれですよね、YouTubeで広告収入を得る方法を講座かなんかで売ってるみたいな。</p>
+<p>**Speaker A**: 教えてくれると、あとObsidianっていうようなノーション文字みたいなやつをちょっと教える講座をやる。</p>
+<p>**Speaker C**: すげーニッチ。</p>
+<p>**Speaker F**: 本当に農家の嫁なんですか?</p>
+<p>**Speaker A**: 本当に農家の嫁。だんだんにそんな稼いできたら口が裂けたほうがいい。</p>
+<p>**Speaker F**: そうなんですね、内緒なんですね。</p>
+<p>**Speaker A**: 農家でそんなにバレたら村八分でしょう。</p>
+<p>**Speaker F**: ああそういうことですね。</p>
+<p>**Speaker F**: じゃあポンちゃんに負けず劣らず地方の人なんですね。</p>
+<p>**Speaker A**: そうですね、そんなポンちゃんみたいな感じですね。地方のひっそりお金持ちみたいな感じ。ひっそりすごいお金持ちみたいな感じ。言えないですよね、そういう人は。</p>
+<p>**Speaker F**: 言えないですね。</p>
+<p>**Speaker A**: そうですね。</p>
+<p>**Speaker F**: 田舎に住んでてよくあるような一軒家に住んでてよくあるような家庭で旦那さんよくあるような職業をしてて嫁めっちゃ稼いでるみたい。</p>
+<p>**Speaker A**: 野良友とかに口が裂けても言えない。</p>
+<p>**Speaker C**: 言えないすねー。</p>
+<p>**Speaker A**: まあそれ普通そんな地方でそんなビジネスありえないじゃないですか。</p>
+<p>**Speaker C**: 得ないすね。</p>
+<p>**Speaker A**: だってみんな社金をものすごく抱えて、社長の給料800万とかでヒーヒー言いながら従業員の給料には年収300万とかでヒーヒー言わせながらなんとか今年も耐えたたりするっていう。</p>
+<p>**Speaker F**: そうですね、地方の事業って。</p>
+<p>**Speaker A**: が大半で、一部めっちゃ儲かってるところもあるけど新潟とかあんのかな。家にいながらね。</p>
+<p>**Speaker F**: ああ、家にいながらパソコンでカタカタやって一人で五千万とか利益作っちゃって。</p>
+<p>**Speaker A**: それは分かんない。</p>
+<p>**Speaker F**: なんだそりゃっていう話だよ。</p>
+<p>**Speaker A**: なんだそりゃですよ。</p>
+<p>**Speaker F**: 無借金で。</p>
+<p>**Speaker A**: ねえ、借金したら別に何のリスクもない。</p>
+<p>**Speaker A**: すごい世界。</p>
+<p>**Speaker F**: ですよ、すごい世界ですよね本当にこの業界は。</p>
+<p>**Speaker A**: ね。</p>
+<p>**Speaker A**: そうなんですよね。</p>
+<p>**Speaker A**: うん、まあそういう今レイヤー的には意外と下で考えたんですけど、下は多分僕が発信してもなんか作業にいる人ですらなんか反応しないなっていうのがあるんで。うん、だからどうだろう、なんかそもそもそういう人は初めっきり入ってきた人は相手にしてもいいけど、最初からお客さんじゃないんだなっていうのが分かった。</p>
+<p>**Speaker C**: そうですね。</p>
+<p>**Speaker A**: なんかちょっと気合入ってる子とかでたまに紛れ込んでくる、いるところあります。じゃあ早くそこで写真でも撮ってとか。</p>
+<p>**Speaker G**: うん、どちらか。</p>
+<p>**Speaker A**: だからそこはあんまりそっちにあんまり目向けてやらなくてもいいのかなとか。そっちのほうがマーケット高いのかなと思ったんですけど。</p>
+<p>**Speaker G**: うん、まぁケンさんでは多分リーチしないマーケットなんでしょうね。</p>
+<p>**Speaker A**: いやー、なんかそれ秋さんとかに喋ってもらったりとか、もしかレゲエビデオのジョンさんとかに喋ってもらったら面白いと思うんですけど、僕が聞いても多分こんな。</p>
+<p>**Speaker G**: うんしないと思います。なんかこうまぁそれこそ年商3,000万とか5,000万ぐらいあってもなんかちょっと毛色の違いを言っているじゃないですか。クライアントワークやってて山本隆に反応しますみたいな感じのそうってちょっと頭弱いと思ってて。ただそのどっちかっていうとこっち系のこう、我々だったりとか吉野さんみたいな話あんま刺さんないそうだった、そうだと思ってるんですよ。</p>
+<p>**Speaker A**: なんかそんなに大げさちょっと、シャニ構えてる感じの、シャニ構えてる強い、大手にぶら下がってないみたいな感じの。</p>
+<p>**Speaker G**: そうなんかこう何を言ってるかより誰が言ってるかに反応するというか、中身の精査ができてないというか。</p>
+<p>**Speaker F**: っていうのはなんかこうちょろちょろ紛れ込んでる中で真似さんのいるなと思ってて、名前見てやっぱ反応しないなと思いながら。</p>
+<p>**Speaker A**: いやまぁ一回何かの間違いかまぁ誰かの紹介かとかで何かで入ってきたけどやったらなんかさあんまりマッチしないのかなぁ、かもしれないですね。</p>
+<p>**Speaker G**: だからやっぱその検査っていうところをキャラクターでリーチする層っていうのはやっぱ限られてくるし、僕がこうコピーとかもやっぱ検査の2、もう100寄せてるんで。</p>
+<p>**Speaker A**: なんかこういうのがあると思って第2弾で、2つ目以降の3つ目じゃないや最近のやつはほぼ上げてます。最初の3通くらいぐらいとかで、すごいなあとか思って、っていうすっごいなあとか思いました、さすが。</p>
+<p>**Speaker G**: ありがとうございます。なんでやっぱその検査のこういい言葉っていうんですかね、こう言い回しだったり言葉って仕草が高いから、そこに反応する層っていうのはすごく限られてると思うんで。</p>
+<p>**Speaker A**: まあなんか、普通、新年度で見るのが中堅以上ですよね。ただ、やっぱ30前半から35以上から、40中盤ぐらいが多分、おじさんまで行ってないけど、中堅ぐらいの感じが多分いいみたいな。</p>
+<p>**Speaker G**: だからミドル以上で、酸いも甘いも知ってきて膝が上がったような多分人たちが、浮き足立ってる感じじゃないので。</p>
+<p>**Speaker A**: 養育されてるような子たち多いです。</p>
+<p>**Speaker G**: そうですね。</p>
+<p>**Speaker G**: まあ特にSNSの界隈Xの界隈なんで余計にっていうのがあると思うんですけど、そこでやっぱなんかケンさんのキャラクターの方がリーチしてもおそらくサービスを個人さんにしたところとで反応しないんだなっていうのが分かりましたね。</p>
+<p>**Speaker A**: やってみてわかった。</p>
+<p>**Speaker G**: 秋さんとかそういうなんかこう別のキャラクターを立ててあげないと。</p>
+<p>**Speaker A**: もうちょっとアホ向けに。</p>
+<p>**Speaker G**: うんうんうんですね。</p>
+<p>**Speaker A**: アホ向けっていうか秋さんの方が今ローンチやらなんかやってるみたい、チャレンジローンチ。</p>
+<p>**Speaker G**: Xでですか?</p>
+<p>**Speaker A**: なんか誘導して。</p>
+<p>**Speaker G**: へぇー全然知りませんでした。</p>
+<p>**Speaker A**: やってるみたい。</p>
+<p>**Speaker G**: 秋さんって本当にセカセカしてますよね。あれですか、引っ越し代回収しなきゃローンチですかね。</p>
+<p>**Speaker A**: ごめんなさいとか言わないでおきしてんの。</p>
+<p>**Speaker G**: いやーなんかこう。</p>
+<p>**Speaker A**: 不思議な人じゃないですか。</p>
+<p>**Speaker G**: 不思議な人というかのんびりしてますね。すごいな彼女がほんとに職には理解できない。</p>
+<p>**Speaker A**: すごいよね。</p>
+<p>**Speaker A**: なかなか自分で盛り上げたくてもよくある人ってハンドル握るのが結構大変。</p>
+<p>**Speaker G**: そうですね、難しいですね。えっと、キャラクターにもよると思ってて、今僕はその八重さんの仕事を手伝ってくれてる方は、めっちゃバランス感覚いいんですよ。</p>
+<p>**Speaker G**: 自分で事業、普通になんかこうマーケッター系の人なんですけど、自分でプロダクトを持ってて、スキレンガみたいな感じのコンテンツをほぼ自分のタッチで自社で回してて大体月3から500ぐらい広告から売ってたりするらしいんですけど、ほぼなんもやることないから暇でっていうので僕の仕事手伝ってもらってて。</p>
+<p>**Speaker G**: 彼は本当にすごくバランス感覚が良くて、いわゆる中間管理職じゃないですかディレクターとかPMみたいなポジションができちゃう人なんですよ。だから上の意向を順守しながらしっかりとそれを下に落とし込んだりとかアウトプットで出せるっていうようなタイプなんで、稀にそういう人もいたりはします。</p>
+<p>**Speaker G**: まあ稀ですね。</p>
+<p>**Speaker A**: というババアのさんがバカでしたら。</p>
+<p>**Speaker G**: まあやっぱり多くは秋さんみたいな、ちょっとハンドリングがしづらい。</p>
+<p>**Speaker A**: あそうっすね、まあスーパー個人事業主っすよ。</p>
+<p>**Speaker G**: 暴れ馬なんだよ。</p>
+<p>**Speaker A**: まあそれが多分は良さというか、目指すならそういうの活かしていかないと、ちゃんと使ってあげないといけないかなっていう。そういう側面が大分が出てきたなと思いました。それがいいところではない。</p>
+<p>**Speaker G**: さっき言うとやっぱりでもこうバリキじゃないですけど、来期以降ちょっと動くっていうところを考えるとそういうバランス感覚の良い人一人。</p>
+<p>**Speaker A**: そうっすね。</p>
+<p>**Speaker G**: アサインしたいなと思っていて。</p>
+<p>**Speaker A**: それはいいっすね。なんかEM的な感じの人と、まあ作業者は別にいくらでも予算をさえあれば採用して速格は全然できるんで。</p>
+<p>**Speaker G**: そうですね。</p>
+<p>**Speaker A**: そういう中間管理職とか必要っすね。</p>
+<p>**Speaker G**: 欲しいですね。</p>
+<p>**Speaker G**: やっぱりウルトラさんのとかもできそうな気がするんですよね彼。</p>
+<p>**Speaker A**: ああ、まあバランス悪いけど。</p>
+<p>**Speaker G**: 頭、はい。</p>
+<p>**Speaker A**: 良いけどね。そんな暇なんだって。</p>
+<p>**Speaker G**: 今どうなんですか、僕も最近ウルトラさんの生態は知らないので何してんだろうって感じ。</p>
+<p>**Speaker C**: いつの間にか自分の講座を頑張って売るような感じの人になってましたけど。</p>
+<p>**Speaker A**: ああそうなんですか。</p>
+<p>**Speaker C**: そう、前まではどっちかっていうとプロデュースというか。</p>
+<p>**Speaker A**: へえ僕もプロデュース系だ。</p>
+<p>**Speaker C**: 受講生を結構プロデュースするような感じの動きをしてたんですけど3年前とか、気づけばなんか自分の講座を売るようになってて、結構しっかりやってるんで。結構なんか方向転換したなぁと思って見てて、忙しいのか忙しくないのか全然わかんないです今の彼女が。</p>
+<p>**Speaker A**: 遊ぶぐらいの余裕がある仕事中心型スタイルみたいな。</p>
+<p>**Speaker G**: そうですね。</p>
+<p>**Speaker A**: 朝方ぐらいの人さんがしゃべれるから、最近暇なの。</p>
+<p>**Speaker G**: はい。</p>
+<p>**Speaker A**: 通常中間管理職がちょっと必要なんです。</p>
+<p>**Speaker B**: うん、ちょっと欲しいですね、もうちょっと。そしたら動かしやすくなると思うので。</p>
+<p>**Speaker A**: 自体がちょっと。</p>
+<p>**Speaker B**: 動く人たちの採用、最近こうランサーズが一番ハマってます。</p>
+<p>**Speaker A**: へー、ランサーズ。</p>
+<p>**Speaker B**: ねめちゃくちゃいい人材が取れるんで。そこで本当になんだろ、まず数募集して数集まってきたところ締めでちょっとよさそうな人を選んでトライアル発注して、そっから絞っていくというか、絞って採用して採用してからもまた絞るみたいな感じのオペレーション組んでるんですけど、かなりハマってて。</p>
+<p>**Speaker B**: 試用期間大事ですよね。</p>
+<p>**Speaker A**: うちの国のアザを見てる、軽自動車とか採用者の方とかしたんですか?</p>
+<p>**Speaker B**: はいちょっとこれから。</p>
+<p>**Speaker A**: やらないと。</p>
+<p>**Speaker B**: 今までいろいろちょっと採用動いてきた中でランサーズが一番僕いいですね。質がいいですよね。</p>
+<p>**Speaker A**: フリーランサー、ランサーズがなんかちょっとやっぱりこの間とかでも少し思い出した。</p>
+<p>**Speaker B**: ちょっとコミュニケーションとか、ランサーズの方がなんかちゃんと。</p>
+<p>**Speaker A**: ただただ安くなればやっ安い。</p>
+<p>**Speaker B**: あ、そう、コスト感めっちゃ安いんですよ。優秀で、能力的にもすごく良いのにすごくコスト感も安くて、最高ですね、ランサーズは。</p>
+<p>**Speaker A**: 君はあとカメラマンを募集したことあるけど、結構どっちもカメラマンなんかそんな先生がこんな値段で来てくれんすかみたいな。</p>
+<p>**Speaker B**: へー、え、撮影の人ですか?</p>
+<p>**Speaker A**: カメラマンを撮影映像をですかそれとも写真の。</p>
+<p>**Speaker B**: 写真?</p>
+<p>**Speaker A**: 写真だから実績とか見せてポートフォリオ見るとかなんかこんなやつですかね。もう人がなんかほんともう駆け出しみたいなことで来てくるとか。</p>
+<p>**Speaker A**: 次は確かにランサーズのほうは何かまだダメダメでちょっと副業みたいな感じじゃなくてデザインとかもちょっと大人っぽい。</p>
+<p>**Speaker A**: 確かに。</p>
+<p>**Speaker B**: 1個そういうケンさんが今おっしゃっていたような実績値の強い人材とかもいたりするじゃないですか、映像で言うとなんか元々テレビ局でやっててみたいな人でもいたりはするので。</p>
+<p>**Speaker A**: それランサーなんですか?</p>
+<p>**Speaker B**: それもランサーズです。単価感とか出せるんだったらそういう人材も採用するってこともできたりするけど、結構幅広というか、安価で優秀な人材からそういう結構実績強めで単価もしっかりするっていう人材までいるのでバランスすごいいいなと思います。</p>
+<p>**Speaker A**: それはそうですよね確かに。</p>
+<p>**Speaker A**: 中間管理職は、まあ今の規模感はありになるけど。</p>
+<p>**Speaker B**: そうですね、なんかもうちょっと動きを出していくっていう時に。</p>
+<p>**Speaker A**: 少なくてもまぁ1億ぐらいに超えてったらかなっていう。これでまぁ月商で、月商でまぁ600万1000万ぐらい見えたらとか、やんないとまずいかな。まぁ入れたらでも今度大きくしないといけないかな、散らかせないように。</p>
+<p>**Speaker B**: でもケンさんの動く総量あんま変わんない気がしますけどね。</p>
+<p>**Speaker A**: まあいてくれたらありがたいです。</p>
+<p>**Speaker A**: 広がっていくのは広がってますねその辺から。まあなんかその前になんかまあちゃんとある程度自分たちで全部やって一通り1から10まで組み立てて。</p>
+<p>**Speaker B**: そうですね土台を。</p>
+<p>**Speaker A**: ですねそれともプロダクトの部分あと入れるだけ状態にするから。</p>
+<p>**Speaker A**: ここがもう来年の前半夏前くらいの課題で。</p>
+<p>**Speaker A**: あ、ここWi-Fiあるんだ。</p>
+<p>**Speaker B**: あるぞ。</p>
+<p>**Speaker A**: どこかに書いてたり、こことかに書いてたりする?</p>
+<p>**Speaker A**: あーめっちゃあるじゃん。</p>
+<p>**Speaker B**: あるぞ。</p>
+<p>**Speaker A**: こっちを携帯リングした。</p>
+<p>**Speaker B**: そうですね、年代の。</p>
+<p>**Speaker A**: 今プロモーションスケジュールとか考えているところ。メルマガ。</p>
+<p>**Speaker A**: 今日、まあ今日じゃなくても全然いいですけど、今日じゃなくて、まあちょっと先の話になると思うんですけど、メルマガの中のタイトルをちょっと大量にメタコンなのをやって欲しいみたいな年代版じゃなくてザッてやってて欲しいみたいな。</p>
+<p>**Speaker B**: あぁわかりました。</p>
+<p>**Speaker A**: ちょっとひたすらかきます。</p>
+<p>**Speaker B**: はい。</p>
+<p>**Speaker A**: かきますようがかかせます。</p>
+<p>**Speaker B**: AIにどれ。</p>
+<p>**Speaker A**: この間なんか結構悪くなくなかったですかこの間。</p>
+<p>**Speaker B**: ですか?共有していただいた。</p>
+<p>**Speaker A**: サンプル出したじゃないですかあれ。</p>
+<p>**Speaker B**: えっとLINEでいただいたやつですよね。</p>
+<p>**Speaker B**: そうですね、あれで全然いいと思いますあんぐらいの感じでいいと思います。うん、全然これでいいと思いますね。</p>
+<p>**Speaker A**: って慣れてきたなんかまあこの間ちょうど直人さんがLINEでやり取りしてたそういうなんかビジネス始めたリーチみたいなところが初期でやり取りしてたからそれを音声で聞くんで5分くらい適当に喋っててそれをちょっとまあテープで付けてもらえないぐらいでちょっとステップメールを、ステップメール上で7つぐらい作るぐらいの気でそしたらなんかあの知ってるぐらいだったまあ悪くないですよね。</p>
+<p>**Speaker B**: 全然この感じでいいと思います。</p>
+<p>**Speaker A**: だから前のステンちゃんとかにちゃんとプロのライターのお金払ったりとか。</p>
+<p>**Speaker B**: 女型というかありますもんね。</p>
+<p>**Speaker A**: それがなんか大体構成の方みたいなじゃあなんかあるじゃないですか。でなんか結構くっつけてもらったのとか割とプレップ法のなんか感じの構成が多かったりとかして。</p>
+<p>**Speaker A**: そういうのベースでちょっと構造化して別のネタで、別のネタかなんか、俺のよく使うコピーのリミアースを使ってなんか作ってくるって。</p>
+<p>**Speaker A**: あれぐらいだったかな。</p>
+<p>**Speaker B**: あのー6月ですか。</p>
+<p>**Speaker A**: 1月1日?1ヶ月分くらいじゃない?</p>
+<p>**Speaker B**: それはすごい。</p>
+<p>**Speaker A**: 毎日送れたら一番いいんですけど。</p>
+<p>**Speaker B**: うーん、毎日メールマガできたらそれは一番。</p>
+<p>**Speaker A**: いや、なかなかできそうな気がするんだけどな、なんかちょっとこだわりを捨てたら。そんな毎日同じような話ばっかしてんだよ俺みたいな。</p>
+<p>**Speaker B**: まあ。</p>
+<p>**Speaker A**: そういうのにこだわりがあるから。</p>
+<p>**Speaker A**: そういう変なこだわりが出てしまうんだ。</p>
+<p>**Speaker B**: ありますよね、でもそれは僕も自分で発信してたときはそうだったんで。</p>
+<p>**Speaker A**: うん、そう同じようにね、なんかそのポンちゃんとかに書いてもらったらいいな、でもこんな同じような話続いてていいの?みたいな思ってしまうけど、別に誰も気にしないですよ、やっぱり。</p>
+<p>**Speaker A**: あ、そうなんだ。</p>
+<p>**Speaker A**: 確かに人のやつ見てもなんかずっとなんか同じこと見てる、同じネタとか。</p>
+<p>**Speaker B**: うん、そうですね。</p>
+<p>**Speaker A**: 社会保険料の削減の話を1年中。</p>
+<p>**Speaker B**: 社会保険で削減のね商品売り切ったらそうですね。</p>
+<p>**Speaker A**: 1年中同じこと言ってんだろう。</p>
+<p>**Speaker B**: いやーすごいなってよくそんな言えるねみたいな。</p>
+<p>**Speaker A**: ね、クライアント毎日売ってんのか分かんないけど。</p>
+<p>**Speaker B**: ストーリー系がなんでいいですよケンさん楽なんで。はいクライアントのこう話をしながらこういうちょっと学びになることを言ってあげるみたいないいのは本当ストーリーは千差万別なんでどれだけでも使えるんで。</p>
+<p>**Speaker B**: ストーリーテリング。</p>
+<p>**Speaker A**: はいストーリーテリングに学びを入れていくみたいな。</p>
+<p>**Speaker A**: そうでできたから。</p>
+<p>**Speaker B**: はい、できました。あとはもう僕今パパーッと作ってるんですけど、文章作ってまたケンさんに見ていただいて送ろうかなと思うので。</p>
+<p>**Speaker A**: まあ新しい、えとまあLINEとかも新しい技術作っておいてくれて、であとは2ヶ月くらいでリリースできたんです。</p>
+<p>**Speaker C**: そうですね。</p>
+<p>---</p>
+<p>※音声の最後の方(約2時間以降)は、録音の整形作業やシステム設定の会話、技術的な雑談が多く含まれていたため、重要な発言や文脈のある部分のみを抽出しています。録音全体を通して、マネーサロンのプロモーション戦略、ランサーズでの人材採用、富裕層向け金融サービスの構造などが主要なトピックとして議論されていました。</p>
+    </div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 05:56
+</div>
+
+</div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
+</body>
+</html>
