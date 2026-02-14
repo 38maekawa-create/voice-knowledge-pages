@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI開発ツール実践講座：CursorとClaude Codeの使い分けとデプロイ実習</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>AI開発ツール実践講座：CursorとClaude Codeの使い分けとデプロイ実習</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年02月15日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">15分57秒</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">Speaker A, Speaker B</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#666;">不明</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">external</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">AI開発ツール</span> <span class="badge badge-tag">Cursor</span> <span class="badge badge-tag">ClaudeCode</span> <span class="badge badge-tag">プログラミング</span> <span class="badge badge-tag">デプロイ</span> <span class="badge badge-tag">ワークショップ</span> <span class="badge badge-tag">実践講座</span> <span class="badge badge-tag">GitHub</span> <span class="badge badge-tag">自動化</span> <span class="badge badge-tag">遠隔操作</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>AI開発ツールのCursorとClaude Codeの違いと使い分けについて実践的に解説している</li>
+<li>Claude CodeはCursorより安価だが初心者には使いづらく、UIの観点からはCursorが推奨される</li>
+<li>参加者に2時間以内に本番環境へのデプロイを完了させ、その後発表会と懇親会を予定している</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>CursorとClaude Codeの比較</h3>
+<p>Speaker AはAI開発ツールであるCursorとClaude Codeの違いを詳しく解説。Cursorは月200ドルのプランで月10個程度のツール開発が可能だが、それ以上開発したい場合はClaude Codeへの移行を推奨。両者の機能はほぼ同じだが、Claude CodeはUIが初心者には触りづらい反面、コストが安く、どんな開発でも月200ドル（約3万円）程度に収まる利点がある。</p>
+<h3>Claude Codeの導入と使用方法</h3>
+<p>Claude CodeはCursor上からインストール可能で、ターミナル経由で操作する。Cursor利用時はCursorに課金が発生するが、Claude Code利用時はClaude Codeに課金される。Cursorではエラーのスクリーンショットを貼り付けて修正依頼できるが、Claude Codeではログを直接確認する必要があり、非エンジニアには難易度が高い。カーソルで作成したルールやスクリプトはClaude Codeでも使用可能で、相互に移行できる。</p>
+<h3>Claude Codeの応用機能</h3>
+<p>Claude Code Webという機能により、GitHubにデータがあればオンライン上で開発が可能で、スマホからでも開発できる。さらに遠隔操作システム（OpenCLシステム）を使えば、LINE公式アカウント経由でパソコンに開発指示を出し、自動で作業させることも可能。Speaker A自身もこの仕組みを既に実装している。</p>
+<h3>ワークショップの進行</h3>
+<p>現在5時半過ぎで、参加者には7時半までの2時間で本番環境へのデプロイを完了させることを目標に設定。自分一人でデプロイまで完了できたという体験を持ち帰ってもらうことを重視。7時半以降は参加者が作成したツールの発表会を実施し、互いに学び合う機会を設ける。その後懇親会を23時過ぎまで実施し、希望者は二次会も予定。</p>
+<h3>AIモデルの選択に関する議論</h3>
+<p>開発作業中にGemini、GPT-4、O3などのAIモデルの選択について会話。API costの観点からO3がGemini 5より優位だが、用途に応じて使い分けることが有効との意見交換がなされた。</p></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[00:00:32]</span> <strong>Speaker A</strong><br>Claude Codeは機能はCursorとほぼ一緒だが、UIがちょっと初心者には触りづらくて安い</div>
+<div class="quote-block"><span class="timestamp">[00:01:28]</span> <strong>Speaker A</strong><br>カーソルからClaude Codeが動かせる。おすすめはカーソルからClaude Codeを使うこと</div>
+<div class="quote-block"><span class="timestamp">[00:04:01]</span> <strong>Speaker A</strong><br>みんながClaude Codeと言っているのは、どんな開発しても200ドルぐらいで済むから。3万円ちょいぐらいで収まる</div>
+<div class="quote-block"><span class="timestamp">[00:05:34]</span> <strong>Speaker A</strong><br>個人的にはCursorの方がちょっとユーザーフレンドリーかなと思う。ただやってることは同じ</div>
+<div class="quote-block"><span class="timestamp">[00:06:44]</span> <strong>Speaker A</strong><br>Claude Code Webという機能があって、GitHubに全部データ残ってればオンライン上で開発できる。パソコンなくてもスマホでも可能</div>
+<div class="quote-block"><span class="timestamp">[00:08:44]</span> <strong>Speaker A</strong><br>LINE公式アカウントに紐付けておくと、LINEから開発指示を投げるとパソコンのClaude Codeが反応して開発してくれる。僕もすでにやっている</div>
+<div class="quote-block"><span class="timestamp">[00:09:16]</span> <strong>Speaker A</strong><br>あと2時間以内にできれば1個は本番環境デプロイまでいけたら嬉しい。自分一人で本番環境まで行けたっていう体感値を持って帰ってもらった方が良い</div>
+</div>
+
+
+
+
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <p>**Speaker A**: あまり箱付き地味にかかるな、カーソルの課金地味にかかるなみたいなものに結構ぶつかるんですけど、俺自身。適当なの、カーソル用で月200ドルのプランだったら、普通に月10個ぐらいツール作っても別にマックスいかないはずなんですけど、それ以上さらに開発したい使いたいみたいな人は、みんなもう最終的にClaude Codeに移動します。</p>
+<p>[00:00:32] Claude Codeって多分今Xでめちゃくちゃ話題になっていて、めちゃくちゃリンク出てくるんですけどね。Claude Codeって結局じゃあ何なんて言った時に、ほぼ一緒ですカーソルと。ただこっちChromeの方は使いづらくて安い。機能はマジで全然ほぼ一緒なんですけど、UIがちょっと初心者にはちょっと触りづらくて、ちょっとそれを見せようと思います。</p>
+<p>**Speaker B**: うん。</p>
+<p>**Speaker A**: [00:01:28] ちなみにカーソル上からClaude Codeが動かせます。僕のおすすめはカーソルからClaude Codeが皆さんの特徴がつきやすいと思います。カーソルからやるときに、例えば皆さんだったら最初に普通のここのスペースにClaude Codeをインストールしたいってまず言ってください。したらインストールしてくれます。難しいことはとにかくClaude Codeインストールしろって。はい、以上。</p>
+<p>[00:01:55] Claude Codeをインストールしたらどうなるかっていうと、使うときの使い方なんですけど、まずここの上にターミナルっていうボタンがあるんですね。もうこれカーソルです。カーソルって上にファイル、編集、選択とかってあると思うんですけど、このターミナルってボタンがあります。ちなみに日本語になってなくて英語で使いづれえよって思う人は、日本語にするカーソルのプラグイン入れてって言えば多分日本語になります。</p>
+<p>ターミナルってとこ押すと新しいターミナルっていうのがあって、このターミナルっていうところで直接そのカーソルみたいに開発を行えるのがClaude Codeなんですね。Claude Codeをインストールすると、ちょっとチャプター飛ばしますけど使い。こっち使うとどうなるか。これ使うときはカーソルに課金が入らないです。Claude Codeの方に課金が入ります。こっち使うときカーソルに課金が入ります。</p>
+<p>[00:03:00] で、今Claude Code入れると、Claude入れると、Claude Codeが起動します。そんな感じ。で、ここでチャットします。例えばGitHub connectしたい、開発したい。そしたらカーソルがこんな感じで動きます。ちょっと確認します。動きます。</p>
+<p>だからさっき、もう本当さっきカーソルでやってるようなことですよね。こっちで動きます。じゃこれでレッドリミアにどうする？みたいな。private true。</p>
+<p>[00:04:01] 最初Claude Code入れたら全部設定とかやらないといけないです。それはやらないといけないです。あの、ルールとか色々ちゃんと設定した方がいいです。Claude Code側に。こんな感じでめちゃくちゃ聞いてきて。なんでみんなClaude Code Claude Codeって言ってるのかっていうと、Claude Codeの方がシンプルに安いからなんですけど、その上限値が割と決まってるんですよね。なんか200ドルぐらいで済むの、どんな開発しても200ドルぐらいに収まるから、3万円ちょいぐらいで済むみたいな流れがあって、めちゃくちゃする人はClaude Codeでやってます。</p>
+<p>ただ正直UIがやっぱりちょっと使いづらいんですよ。カーソルのときはなかエラーとかスクショ撮ってこれ見て直してって、画像貼り付けたりとかできるんですけど、こっちできない。ちょっと長いエラー出てるからログ見てとか、なんかそのエンジニア経験がある人もまあ普通に、いやここのログ見てくれればエラー見つけられるよねみたいなことが普通にできるんですけど、ちょっと非エンジニアにとってはちょっと大変な感じです。</p>
+<p>[00:05:34] だからClaude Code、Claude Codeってみんな言ってますけど、個人的にはカーソルの方がちょっとユーザーフレンドリーかなと思います。ただやってることは同じです。実は。ここでルールとかも追加できます。こんな感じで。それをGitHubに反映できる。マークダウンで作ればいいと思います。</p>
+<p>[00:06:13] カーソルで作ったルールはClaude Codeにも適用したいって言えば、Claude Codeで適用できるし、カーソルに作ったなんかスキップみたいなのがあれば、これClaude Codeでも使いたいって言えば、じゃあClaude Codeに持っていきますってやってくれるし。全然ツーカーでいきます、やってることは。途中までカーソルで開発していたものをClaude Codeで続きに開発したいってこともできます。</p>
+<p>[00:06:44] あとClaude Codeの、いいところはこれ以外で言うと、もう一個Claude CodeがClaude Code Webっていうのを出してるんですけど、これ今パソコンで操作してるじゃないですか。Claude Code Webっていう機能があって、それだったら例えばGitHubに全部データ残ってればGitHub、Claude Code Webオンライン上で繋ぐと、オンライン上で開発できます。GitHubを見ながら。だからパソコンなくてもオンライン上でスマホでGitHub参照させて続き開発させるとか、そういったところもできる。急なところもあって、Claude Code熱い。なってたり。</p>
+<p>[00:07:36] まあ、あとはなんていうんですかね、こうClaude Codeを遠隔で操作するみたいなのがちょっと流行ってて。今直接パソコンでこれで操作してますけど、そうじゃなくてこのパソコンに対して遠隔でClaude Codeに指示出して、勝手にパソコンを貸して開発させるとか、勝手に仕事させるみたいなものがちょっと流行ってて、それがオープンクローズシステム。それも多分X見てると意識アンテナ張ったらめっちゃ出てくると思います。</p>
+<p>それは例えば究極言うと、設定をいろいろやってくるのも、LINE公式アカウントとかになんかそのOpenCLの紐付けとくなら、LINE自分のラインその紐づけたLINE公式アカウントにちょっとこの開発やっといてよって投げとくと、パソコンが反応して開発してくれますみたいな感じで開発してくれるとか、ちょっとこの資料を作っておいてみたいなLINE投げとくと、CLコードが家のパソコンのCLコードが反応してやっておきますみたいな感じでやるみたいなことが実はできます。僕もすでにやってるというします。</p>
+<p>[00:08:44] っていうのが、そういうのができるっていうことだけ覚えておく。ただ別にそこまでやりたくないですよねみたいな、やらなくてもいいやって人は、普通にカーソルをまず使いこなすでいいと思います。はい。ただ話題によってちゃなるんで、なんなのClaude Codeっていうのは知っておいた方がいいなと思います。はい、大丈夫そう？なんか質問あります？</p>
+<p>まあとりあえず質問なければまた開発戻ってもらって、はい、こんな感じです。</p>
+<p>[00:09:16] ちなみに本番環境までは終わったような気がします。デプロイしたよ。なるほど。一応今5時半過ぎぐらいなので、あと2時間以内にできれば1個は本番環境デプロイまでいけたら嬉しいです。やっぱり自分一人で本番環境まで行けたっていう体感値を持って帰ってもらった方が色々できると思うので、あと2時間の間に1個は本番環境を上げてください。</p>
+<p>[00:09:52] で、7時半ぐらいになったらせっかくこれだけの方が集まってくれたんで、皆さんがどんなものを作ったかっていうのをシェアし合うみたいな発表すると、あ確かにそういうツールもいいなとか、あれ俺も今度やってみようとか、そういうツールあるんだったら確かに応用してこういうこともできるなって発想が広がる機会になるんで、7時半過ぎぐらいになったらちょっと発表会やって、その後懇親会っていう感じです。</p>
+<p>[00:10:19] 参加申し込みされる方は一旦会場に移動してという感じでいきます。であとあとあと把握しておきたいのは、懇親会は一応23時過ぎぐらいに終わろうかなと思ってるんですけど、希望者は普通にそのままでさらに二次会もやろうかなと思ってるんで、希望者のなんか数だけ把握したいんで、ざっくり行こうかなって検討中でもいいんですけど、人数が多かったら先に席を押さえとかないといかないんで、オープンチャットに二次会も行こうかなっていう気分ですみたいなのは、一応オープンチャットに入れといてください。</p>
+<p>そんな感じです。はい、じゃあちょっと続きいきましょう。</p>
+<p>（開発作業中の会話）</p>
+<p>**Speaker A**: [00:12:38] 3種類をそのしてもらえるっていうので、もももいいかもピンクの背景でもも。もももそういうのでもももそうですね。ももとかだったらもももかな。あの5ビジョンの背景ももだったらいいかもしれない。</p>
+<p>あ、5ビジョンの方がももじゃなくて精度が高いっていうのはありますけど。あの4と4だったら4じゃないですか。4はなんか一応5を使う意味はなくはないみたいな。4がスキルとかじゃなくて、あとAPI costが完全に4、O3の方がもう5より全然。O3の方が断トツ5より。</p>
+<p>あ、でも10倍とかそういうのがあるじゃないですか。でもなんかあの全部使い切る必要ないから、たまに使う分にはいいっていうパターンもあって。そのときの感じでちょっと飽きたなと思ったら、じゃあGeminiの番みたいな。Gemini 3のモデルを使おうみたいな。</p>
+<p>あ、なるほど。じゃあ多分新しいモデルをじゃあ人に渡すのはいいアイデアですね。</p>
+    </div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 04:07
+</div>
+
+</div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
+</body>
+</html>
