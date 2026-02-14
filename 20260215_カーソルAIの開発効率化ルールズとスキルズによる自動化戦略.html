@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>カーソルAIの開発効率化：ルールズとスキルズによる自動化戦略</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.transcript-toggle:hover {
+  opacity: 0.9;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>カーソルAIの開発効率化：ルールズとスキルズによる自動化戦略</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年02月15日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">17分15秒</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">青木（講師）, Speaker B, Speaker C, Speaker D, Speaker E, Speaker F</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#ea4335;">聴講者</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">external</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">カーソルAI</span> <span class="badge badge-tag">開発効率化</span> <span class="badge badge-tag">ルールズ</span> <span class="badge badge-tag">スキルズ</span> <span class="badge badge-tag">AI育成</span> <span class="badge badge-tag">自動化</span> <span class="badge badge-tag">エンジニアリング</span> <span class="badge badge-tag">ナレッジDB</span> <span class="badge badge-tag">AI分身</span> <span class="badge badge-tag">自動応答システム</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>カーソルAIの開発効率化において、ルールズ（開発ルールの自動化）とスキルズ（繰り返し作業の登録）という2つの概念を活用する方法を解説</li>
+<li>エラー自動修正ループやモデル切り替えルールなど、優秀なエンジニアが公開するルールやスキルを収集・登録することで、カーソルを育成ゲームのように最適化できる</li>
+<li>過去の質問・回答をデータベース化し、AI分身による自動応答システムの構築も実践中で、精度向上に取り組んでいる</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>カーソルAI開発の効率化アプローチ</h3>
+<p>開発作業を楽にするための工夫として、ルールズとスキルズという2つの概念を導入。開発者は自分でエラーテストやスクリーンショット撮影を行わず、AIに自動化させることで作業負荷を大幅に削減できる。</p>
+<h3>ルールズ（Rules）の概念と実装</h3>
+<p>ルールズとは開発を楽にするためのルールを設定し、それに沿って作業を自動化する仕組み。具体例として、エラーテストの自動化、スクリーンショット自動取得、改善ループの自動化などがある。同じエラーが3回治らない場合はCodex 5.3に切り替え、それでも治らなければ諦めるという段階的なルール設定も可能。優秀なエンジニアがX（Twitter）などで公開している良質なルールを見つけたら、記事をカーソルに貼り付けて「これからルールを作って」と指示するだけで実装できる。</p>
+<h3>スキルズ（Skills）の概念と活用</h3>
+<p>スキルズとは、繰り返し行う類似作業をスキルとして登録し、再利用可能にする機能。同じAPI連携や同じパターンの作業が頻発する場合、一度スキルとして登録すれば、次回以降は自動的にそのスキルを参照して実行してくれる。例えば、デザインセンスの良いエンジニアのデザインスキルを入手してカーソルに登録すれば、即座にそのレベルのデザインが可能になる。</p>
+<h3>AI育成ゲームとしての開発観</h3>
+<p>「これからのAIはシミュレーションゲー、育成ゲー」という発想で、カーソルにいかに良いルールとスキルを与えて優秀に育て上げるかが重要。人間の教育と異なり、AIは一発で覚え、忘れても思い出させれば即座に対応できるため、教育コストが極めて低い。</p>
+<h3>ウェブブラウザレス開発の可能性</h3>
+<p>究極的には、自分一人の作業であればウェブブラウザすら不要になる可能性がある。APIを与えてリサーチを依頼すれば、カーソルが勝手に開発してリサーチ結果を出力してくれる。これをスキル化しておけば、必要なAPIを渡すだけでカーソル内で処理を完結できる。</p>
+<h3>AI分身による自動応答システムの開発</h3>
+<p>コンサルティングでの大量の返信業務を効率化するため、自分のナレッジやスキルを参照してAIが自動回答するシステムを構築中。過去の壁打ちセッションを全て文字起こしし、質問と回答をデータベース化。それに自分のセミナー録画データなども加えて、思想や考え方を反映した回答を生成できるようにしている。「大野の分身AI」というキャラクターとして期待値調整を行い、壁打ち相手として機能させる設計。</p>
+<h3>実践的な学習アプローチ</h3>
+<p>複数のツールを実際に開発してみることで、「こんなこともできるんだ」「こういうところでつまずく」といった経験を積むことが、ルールズとスキルズを効果的に活用するための基礎になる。デプロイして本番環境にアップする経験も重要。</p></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[00:00:00]</span> <strong>青木</strong><br>開発はいかに楽にするかの工夫ゲームであり、ルールズとスキルズという2つの概念が鍵となる</div>
+<div class="quote-block"><span class="timestamp">[00:02:00]</span> <strong>青木</strong><br>ルールズとは開発を楽にするためのルールを決め、それに沿って自動化すること。例：エラーテスト自動化、改善ループの自動化、同じエラー3回で別モデルに切り替え</div>
+<div class="quote-block"><span class="timestamp">[00:04:30]</span> <strong>青木</strong><br>天才エンジニアがXなどで公開している良いルールを記事ごとカーソルに貼り付けて『ここからいいルールズ作って』と依頼すれば実装できる</div>
+<div class="quote-block"><span class="timestamp">[00:06:00]</span> <strong>青木</strong><br>スキルズは繰り返し行う類似作業をスキルとして登録し再利用する機能。デザインスキルなど他者の優れたスキルも取り込める</div>
+<div class="quote-block"><span class="timestamp">[00:06:30]</span> <strong>青木</strong><br>これからのAIはシミュレーションゲー、育成ゲー。カーソルにいいルールとスキルを与えて優秀に育て上げる。人と違って一発で覚え、忘れない</div>
+<div class="quote-block"><span class="timestamp">[00:08:00]</span> <strong>青木</strong><br>究極的には自分一人の作業ならウェブブラウザも不要。APIを与えればカーソルが勝手にリサーチして結果を出してくれる</div>
+<div class="quote-block"><span class="timestamp">[00:11:03]</span> <strong>青木</strong><br>コンサル返信の自動化：過去の壁打ちを全て文字起こし→質問を切り分けてDB化→セミナーデータも加えて思想を反映した回答を生成。大野の分身AIとして期待値調整</div>
+</div>
+
+
+
+
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <div class="transcript">
+    <p>**青木**: まず単純に開発はもう、これいかに楽にしてやろうとかのために、どういう工夫をするかっていうゲームになってくるんですね。あえて皆さんにはこれを今、そのヒントを少ない状態の中でやってもらってるんですよ。これぐらい出るんだみたいな。</p>
+<p>**青木**: 今フォーカス4.6になってるんで、そもそも減ってるんですけど、ただそれでもまだエラーは残ると。それをいかにして楽にするか、工夫の話でいった時に、そこに出てくるのがルールズっていう概念とスキルズっていう概念が2つ出てきます。これ何なのかって話なんですけど。</p>
+<p>**青木**: ルールズって何なのかっていうと、要するに開発を楽にするためのルールを決めて、そのルールに沿って報道してもらうっていう、普通の会社組織と一緒です。うちの会社の行動規範はこれだからみたいな、うちのタスクのセリフ作りやる時のルールはこれだからっていうのを、全員これを必ず守ってくださいっていうのをルールを作ってしまう。</p>
+<p>**青木**: じゃあ例えばどういうルールを作れば楽になるのかって言った時に、僕が最初思いついたルールは何だったかっていうと、例えば開発しました、そしたらテストしなきゃいけないんだけど、自分でエラーテストするのがもうめんどくさくなっちゃったから、テストを代わりにやってもらうと。画面を動かして自分でテストしてと。</p>
+<p>**青木**: でそしたらエラー出てくるわけですよね。で、エラー見つけたら今自分でスクショ撮ってるわけじゃないですか。これ代わりにお前がやれと。スクショ撮れと。</p>
+<p>**青木**: でスクショ撮って、そしたら改善のフローにもう一回改善しようか。で、それ改善したらもう一回ここループして、もう一回テストして画面動かして改善しようっていうのを、ここを自動ループ化させるっていうルールを作ります。</p>
+<p>**Speaker B**: うーん。</p>
+<p>**青木**: このルールを持たせておけば勝手にやるわけです。</p>
+<p>**青木**: でだけど実際これやってみるとまた起きることが、同じエラーが一生治らないっていうパターンがあるんですよ。なんか何回やっても全然治してこないな、お前みたいな時は起きるので、じゃあ同じエラーが3回治らなかったら、Codex 5.3に切り替えてもう一回この改善ループを回せと。</p>
+<p>**青木**: でそれをだから、オーパスで4.6で3回動かして治らない、だったらコーデックスに行け、3回動かしても治らない、それは諦めろと。みたいな感じで、そうすると放置して他の仕事できるみたいな感じですね。っていうようなルールを作ってしまえっていうのがルールズっていう考え方なんです。</p>
+<p>**青木**: でルールズってどういう風にじゃあ作ればいいのか。シンプルでカーソルにこういうルールを作る、これをルール図として登録しろっていうだけです。</p>
+<p>**青木**: でそのルールズが良いルールだった場合、これは他の開発の時にも使い回したいよねっていう発想になるわけで、そうなってくると、さっきの右上のちっちゃい歯車、カーソルセッティングってところを最初いじってもらったんですけど、カーソルセッティングのところに実はルールズっていうボタンがあるんです。</p>
+<p>**青木**: そこに登録してくださいというだけです。カーソルに対してこれいいルールだから今後も使い回したいからルールズとして登録しといてって言えば入ります。そうすると他の開発の時も全部それが適用されるっていうのがルールズです。でこのルールズっていうのは、出発してください。すいません誰か覗いてます？</p>
+<p>**青木**: でこのルールズっていうのは、もちろん自分たちでそうやって考えてもいいんだけど、でも世の中には天才エンジニアがいっぱいいるはずなんですよ。で天才エンジニアたちがいっぱい良いルールを編み出してるはずなんですよ。それをよくXではなんかすごい天才のエンジニアさんが良いルールを公開してくれてますみたいなのが、Xとかにはポロッとあったりとかするんですよね。</p>
+<p>**青木**: だからエンジニアの人たちってそういうのを教え合うみたいな文化のところがあって、我々の世界ではそれをノウハウを教え合うって文化になってるから、それをありがたく頂戴して。僕だったらもう、それで良い記事、記事とかそういうのを解説してくれてる記事とか見つけたら、この記事をカーソルにパーンって貼っ付けて。</p>
+<p>**青木**: カーソルにこんな記事が立ったんだけど、ここからいいルールズ作ってくんないみたいな、OKみたいな感じでやらせるみたいな感じです。僕が正直その記事読んでも分からないっす。何言ってんだみたいな、合理的な気はするみたいな。</p>
+<p>**青木**: でやっぱりその開発トップクラスの人たちになればなるほど、品質チェックAIエージェントとか、構文エラーチェックAIエージェントとか、そのエラー見つけたらさっきの自律改善するループシステムとか、みんなそれぞれよくわかんないルールいっぱい作ってるんですよ。でそれを全部記事見つけたらやって、ルールに投獄させると、開発がどんどん楽になるっていう世界線です。</p>
+<p>**青木**: で、もう一個はスキルズっていう概念があって。例えばどうしても、これ開発している時だけの話じゃないんですけど、カーソル触っててこれ似たような作業をしてるなっていう場面が何回も開発してると出てきたりするんですよ。それは例えば2個目のツール作ろう、3個目のツール作ろう、4個目のツール作ろうってなった時に、例えばいつも俺同じAPI共有してるなとか、同じような作業をめっちゃしてるなみたいなパターンが出た時に、その同じような作業をもういちいちやり取りするのがカードのめんどくさいから、これスキルとして登録しとけと。</p>
+<p>**青木**: でスキルとして登録しとけって言えば、分かりました、これスキルにしときますって言って、一度登録されたものは、そのスキルを参照して同じ作業を実行してくれるっていうのがあります。</p>
+<p>**青木**: これは開発でも、開発用に作られたものなんですけど、だから同じようにスキルズってものもいろんな人たちが公開してくれてたりするんですよ。</p>
+<p>**青木**: で、だから例えばめちゃめちゃデザインセンスがいいエンジニアさんがいた、いいデザインスキルを持ってますみたいな人がいた時に、いいデザインのそのスキル図をもし皆さんがゲットしてカーソルにこれスキル図として入れとけって言ったら、もうその瞬間からそのスキルを使ってめっちゃかっこいいデザインになるんですよ。わかります？</p>
+<p>**Speaker C**: うーん。</p>
+<p>**青木**: だからそういうスキル集めゲーになってくるんですよこれから。だから僕は最近ですけど、これからのAIはシミュレーションゲーだと、育成ゲーだと。このカーソルちゃんをいかにいいルールを持たせ、いかにいいスキル図を与え、いかにそれで優秀な子に育て上げるかみたいな。しかも素晴らしいのが、人を育てる時はルールを教えても守らないし、ルールを教えてもスキルを教えてもすぐ忘れても、忘れたりできねえとか言い出すし、マジで教育に時間かかるわって感じですけど、こいつらは一発で覚えるんで。登録しておけばやります。</p>
+<p>**Speaker D**: うーん。</p>
+<p>**青木**: まあもちろんメモリの問題があって、たまに忘れちゃったりとかするんですけど、忘れてるときはお前こういうスキルあったじゃん思い出せよって言ったら、あ忘れてましたみたいな感じで。使うならだいぶストレスないです。</p>
+<p>**青木**: だからそういうことをどんどん登録していく。例えばもっと極端なこと言うと、今はそのウェブのブラウザを作っている理由ってもちろん自分をあった方が見やすいし、あとは他社と共有し合う、うちの自分のスタッフとか仲間と共有し合うというのは絶対ウェブのブラウザがあった方が楽だと思うんですけど、ただ正直自分一人が作業をこなすだけだったら、ウェブブラウザなんて究極いらないってことにある日気づく瞬間があって。</p>
+<p>**青木**: 例えばウェブのアプリケーションブラウザなしにして、自分がやりたいリサーチとかって、例えばAPI与えちゃえば勝手に開発してリサーチしてくんないってカーソルに投げたらどうなるんだろうっていうことをある日僕は思いついて、それをやったら別にウェブブラウザなしに全部出してくるわけですよ、結果を。</p>
+<p>**Speaker E**: うーん。</p>
+<p>**青木**: で、それで自分の作業自体を進めることができる。それをまたそういうものをスキルにしておくと、1回スキルにしておいたら、とりあえず必要なAPI渡しておいたら、自分がやりたいことをカーソルが先回りしてスキル駆使して全部代わりにやってくれて、カーソル内で処理を完結してくれるっていうのが世界線になってくるんですね。</p>
+<p>**青木**: そのためにも、とはいえまず色々開発してみた方が、こんなこともできるんだ、こんなこともできるんだ、こういうことやる時に大体こういうところでつまずくんだとか、文字起こしってこういうところで引っかかるんだとかっていう概念が入っている方が、スキルズもうまく使えるようになってくるんで、まずは開発を2個、3個、4個、5個、6個、7個って暇な時間やってって、良いルールとじゃあ良いスキルとは何かっていうことにちょっとアンテナ張って、カーソルに登録しとけ、登録しとけって言い続けるみたいなっていうゲームですよっていう話です。</p>
+<p>**青木**: 大丈夫ですか？はい。ということで、まあ引き続きちょっと開発はしてもらって、で、できれば今日少なくとも1個は必ず本番環境、デプロイ本番環境にアップするっていうのは必ず1ツールやってもらいたいので、まあなるべくエラー潰して、それやってみてください。</p>
+<p>**青木**: であとまあ、本番環境に上げるのは1回だけでもやればだいたいわかるって言ってるけど、2ツール目、3ツール目も今がある人はどんどん開発してもらって。では、これからインタビューをしますので、はい、でガンガン弾いてもらえればと思います。</p>
+<p>**青木**: であと、普通にこういうルール入れるのどう思いますか？とか、こういうスキル探してるんですけどなんか知らないですか？とか、そういうのも弾いてもらって大丈夫です。はいじゃあ続きいきましょう。</p>
+<p>---</p>
+<p>[00:11:03]</p>
+<p>**Speaker F**: 大野さんって人になんかいろいろコンサルで返信する時とかむっちゃ多いと思うんですけど。</p>
+<p>**青木**: はい。</p>
+<p>**Speaker F**: それってなんかAIかませたりしてますか？</p>
+<p>**青木**: 今とかしてないですね。</p>
+<p>**Speaker F**: あ、じゃあ実はしてないんですね。</p>
+<p>**青木**: 今とかしてないですけど、なんだろうな、自動化することをできるようにしようって発想はあって。それは例えばですけど、AIが僕のいろんなナレッジとかスキルを参照して、これに対してはこういう回答するのがぽいなって考えさせて、AIに勝手に回答させるみたいな。</p>
+<p>**青木**: だけど期待値調整しとかないとなので、それはそういう大野の分身AIみたいなキャラクターにしておいて、そいつに聞けばすぐ返ってくるけど、大野が回答してるわけじゃないからねみたいな。ただそれなりにいい壁打ち相手にはなるよみたいな。</p>
+<p>**Speaker F**: はいはいはい。</p>
+<p>**青木**: みたいなものはすでにできた、作ってます。</p>
+<p>**Speaker F**: じゃあ全然それで納得、まあできないもしくは本当に聞きたかったらもちろん来てねみたいな感じ。</p>
+<p>**青木**: そうっすね、そうっすね。とかまあいろいろ工夫はしたいっすけど。</p>
+<p>**青木**: まあでも、超無難に行くんだったら、過去のいろんな質問を全部DB化しちゃって、データベース化しちゃって。データベース化するのって簡単で、過去にいっぱい壁打ちとかやってればそれ全部文字起こしとっといて、全部録音データとっといて。</p>
+<p>**青木**: 全部録音をAIにこうやってシステム自分で開発して、一気に文字起こしあるみたいなのやっちゃって、それを全部フォルダに書き込んでおいて。それを全部質問をAIに切り分けを自分で自動でさせる。質問を全部切り分けさせといて、問答集みたいなもの作っちゃって、それがその上の自分のなんだろうな、問答集とあとはそれがどういう思想と考え方となりてに基づいて、いつもこういう回答しているのかというのも参考になりそうな自分のセミナーみたいなものとかの録画データとかも全部ぶち込んでおいて、これ二つ合わせて回答してみたいな。</p>
+<p>**青木**: そういうのはもうやってますね。で精度上げ中ですね今。</p>
+<p>**Speaker F**: あー、なるほど、なるほど。</p>
+<p>---</p>
+<p>[00:14:10]</p>
+<p>**青木**: [カーソルの操作説明中]</p>
+<p>**青木**: でこっちがこう、ルールズというのは自分のショー。じゃあルールズは、ルールズをここに、ニューを入れてとって。でそれしてこれしてこれしてこれして、ルールを使って。それを変更して、でもあなたはそこに残って。で、オーケー、わかった、でもあなたはこれを閉じる、でもそこに残って。</p>
+<p>**Speaker F**: うん。</p>
+<p>**青木**: それをフォルダに入れて。</p>
+<p>**Speaker F**: じゃあもっとそういうの入れないと。</p>
+<p>**青木**: カーソルはこれを閉じるつもり。</p>
+<p>**Speaker F**: うーん。</p>
+<p>---</p>
+<p>[00:15:14]</p>
+<p>**青木**: に代わりに画面を動かしてやらせるってなった場合に、そういう指示をするとMCT使っていい？って聞かれると思うんですけど、使っていいよって答えてあげてください。はい。</p>
+<p>**青木**: MCTってなんだろ？と思った人はチャットGPTに聞いてください。</p>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 02:43
+</div>
+
+</div>
+</body>
+</html>
