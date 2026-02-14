@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI/CDパイプラインとGitHub Actionの基礎解説</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>CI/CDパイプラインとGitHub Actionの基礎解説</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年02月15日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">8分32秒</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">Speaker A</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#666;">不明</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">external</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">CI/CD</span> <span class="badge badge-tag">GitHub</span> <span class="badge badge-tag">GitHubAction</span> <span class="badge badge-tag">デプロイ</span> <span class="badge badge-tag">自動化</span> <span class="badge badge-tag">開発環境</span> <span class="badge badge-tag">パイプライン</span> <span class="badge badge-tag">GoogleCloud</span> <span class="badge badge-tag">カーソル</span> <span class="badge badge-tag">エンジニアリング</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>本番環境実装後のCI/CDパイプライン構築について、エンジニアがよく行う開発フローの解説が行われた</li>
+<li>ローカル開発からGitHub、本番環境（Google Cloud）への自動デプロイの仕組みと、GitHub Actionによる自動テストの流れが説明された</li>
+<li>カーソルの優秀さにより必須ではないが、エンジニアとのコミュニケーションのために知識として理解しておくべき内容として位置づけられた</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>CI/CDパイプラインの概要</h3>
+<p>現在の開発環境として、ローカル（カーソル）→GitHub→Google Cloud（本番環境）という3層構造が存在している。CI/CDパイプラインを構築することで、これらを自動的に連携させることができる。</p>
+<h3>自動デプロイの仕組み</h3>
+<p>CI/CDパイプラインを繋ぐと、ローカルでコミット・プッシュした際に、自動的にGitHubに保存され、さらに本番環境にも自動反映される流れが構築される。通常は手動で本番環境への反映指示が必要だが、パイプライン構築により完全自動化が実現できる。</p>
+<h3>GitHub Actionの役割</h3>
+<p>GitHubに標準搭載されているGitHub Actionという機能により、本番環境へのデプロイ前に自動テストが実行される。オンライン上で動作確認を行い、問題がなければ自動的に本番環境に反映される仕組みとなっている。</p>
+<h3>実務での位置づけ</h3>
+<p>カーソルが優秀なため、現代の開発環境では必須ではないが、エンジニアとの協業時のコミュニケーションのために知識として理解しておくべき内容。特に開発したものを商品化する際にエンジニアとやり取りする場面で重要となる。</p></div>
+</div>
+
+
+
+
+
+
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <p>**Speaker A**:</p>
+<p>[00:00:00] 今本番環境の実装というものを皆さんチャレンジしていると思います。できた方も多いと思うんですけど、その後に実際のエンジニアさんとかがよくやるのは、本番環境アップした後にこのCI/CDパイプラインを繋ぐという最後の仕上げをやったりするパターンが多くて、別にマストじゃないんですけど、知識として知っとかないと、</p>
+<p>[00:00:27] 「これってパイプラインどうなってますか？」とか言われた時に、「は？」みたいな感じになるので、一応知識として入れといてもらって。</p>
+<p>[00:00:36] 別に試しにCI/CDパイプライン組んでみるっていうのをやってみたら、経験としてすごくいいです。</p>
+<p>[00:00:41] で、これ結局何なの？って話なんですけど、</p>
+<p>[00:00:49] 今本番環境、ほとんどの方には基本的に僕はGoogleクラウドにアップしてくださいという風に言ってます。で、そうすると今状況として起きていることで言うと、ローカルで自分のパソコンでこうやってプログラミングコードカーソルに作ってもらって、それを今GitHubっていうところに全部保存するように残していて、さらにGoogleクラウドっていう本番環境にも上がってますっていう、そういう状態になってるわけなんですけど、</p>
+<p>[00:01:15] これをパイプラインとしてガチガチに繋いじゃえっていう作業を、まあCI/CDパイプラインを繋ぐっていう開発用語がありますで。じゃあこれ繋ぐってことすると結局何が起きるの？って話なんですけど、繋ぐとですね、例えばローカルで今カーソルで作業してて、</p>
+<p>[00:01:41] さっきちょろっと言ったけど、セーブでコミットみたいな、コミットプッシュみたいなのをすると、それがセーブされてさらにGitHubに残るようみたいな話があると思うんですけど、さらに言うとそれでGitHubに上がったアプリを、それをまた自動で本番環境にアップするっていうところまでを、</p>
+<p>[00:02:07] 普通は指示しないと本番環境にまで反映されないんですけど、</p>
+<p>[00:02:11] 繋いでおくとコミットプッシュしたらもう自動で本番環境に上げますねと。</p>
+<p>[00:02:16] 本番環境に上げる際に、実はGitHubの機能の中にGitHub Actionっていう元々機能が入っていて、これ何なのかっていうと、本番環境に上げる前に</p>
+<p>[00:02:28] testして、まあオンライン上で動かしてみて問題ないかっていうのを自動チェックしてくれる機能、GitHub Actionっていうのがあるんです。で、だからCI/CDパイプラインにも繋いでいる状態にしておけば、じゃあローカルでこういう修正したよ、よし、これでいけそう、よし、コミットプッシュっていうのをやると、勝手にGitHubに上がった後に、GitHubでGitHub Actionっていうのが動いて、これオンライン上で動かして問題ないかなって自動チェックが勝手に動いて、</p>
+<p>[00:02:55] その後そのままOKだったら自動で本番環境に全部反映されるっていうところを綺麗に繋いでおくっていうのを、CI/CDパイプラインを繋ぐっていう、そういう風に</p>
+<p>[00:03:10] っていう知識です。</p>
+<p>[00:03:11] で、別に繋がなくてもカーソルが優秀なんで、一応気を利かして本番環境にもこれ上げておきますねとかってやってくれたりするので、</p>
+<p>[00:03:23] 現代カーソルに関してはマストではないですが、一応知識として知っておいた方がいいかなという言葉になります。</p>
+<p>[00:03:32] はい、で、</p>
+<p>[00:03:33] あとはエンジニアさんと何か組んで、例えば</p>
+<p>[00:03:36] 例えば自分でベース作ったものを、これワンチャン売り物にしたいなってなった時とかに、エンジニアさんに最終細かいところ問題ないかとかチェックしてもらったり整えてもらうみたいなことが起きたりします。で、そういう時にエンジニアさんに、これ</p>
+<p>[00:03:54] 「パイプラインがどうとか」「CI/CD組みます」とか言われた時に、対話にならないのは辛いので知っておく。で一応全部それは、もうパイプライン繋いでありますとか、あとそれら辺も全部入ってるんでGitHub見といてくださいって言えば、今のエンジニアさんは全部分かるので、そういうコミュニケーションとして使っていくという感じです。</p>
+<p>[00:04:25] Okay, so after 15 minutes, you guys will announce what you guys have made, so I think that's pretty much it for now. So after 15 minutes, you guys can finish up and then I'll show you guys what you guys have made. Alright, that's pretty much it.</p>
+<p>**Speaker B**:</p>
+<p>[00:08:21] To the potential... Yeah, I think we can cut this.</p>
+<p>**Speaker C**:</p>
+<p>[00:08:22] Yeah.</p>
+    </div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/02/15 04:07
+</div>
+
+</div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
+</body>
+</html>
