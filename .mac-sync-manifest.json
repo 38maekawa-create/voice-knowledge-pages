@@ -1,0 +1,11 @@
+{
+  "project_name": "voice-knowledge-pages",
+  "description": "音声ナレッジ化システムの出力先（生成済みHTMLページ）",
+  "runtime_requirements": {
+    "external_directories": [],
+    "config_files": [],
+    "credentials": [],
+    "env_files": [],
+    "post_clone_commands": []
+  }
+}
