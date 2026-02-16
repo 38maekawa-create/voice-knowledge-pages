@@ -1,0 +1,15 @@
+# 認証情報・機密ファイル
+credentials.json
+credentials*.json
+service_account.json
+*service-account*.json
+*.pem
+*.key
+
+# 環境変数
+.env
+.env.local
+api-keys.env
+
+# macOS
+.DS_Store
