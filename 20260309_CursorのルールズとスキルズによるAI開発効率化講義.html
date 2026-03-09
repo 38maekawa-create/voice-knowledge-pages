@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CursorのルールズとスキルズによるAI開発効率化講義</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>CursorのルールズとスキルズによるAI開発効率化講義</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年03月09日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">17分15秒</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">Speaker A, Speaker F, Speaker B, Speaker D, Speaker E</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#ea4335;">聴講者</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">external</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">#Cursor</span> <span class="badge badge-tag">#AI開発</span> <span class="badge badge-tag">#ルールズ</span> <span class="badge badge-tag">#スキルズ</span> <span class="badge badge-tag">#Claude</span> <span class="badge badge-tag">#MCP</span> <span class="badge badge-tag">#自動化</span> <span class="badge badge-tag">#AIエージェント</span> <span class="badge badge-tag">#育成ゲーム</span> <span class="badge badge-tag">#分身AI</span> <span class="badge badge-tag">#ワークショップ</span> <span class="badge badge-tag">#ハンズオン</span> <span class="badge badge-tag">#開発効率化</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>Speaker AがCursorを使ったAI開発を効率化するための「ルールズ」（開発ルールの自動化）と「スキルズ」（繰り返し作業の登録）という2つの概念を解説した講義形式のセッション。</li>
+<li>ルールズではテスト自動化・エラー改善ループの自動化・AIモデルの切り替えルールなどを登録することで、開発者が手を動かさずともCursorが自律的に作業を進められる仕組みを構築できると説明された。</li>
+<li>スキルズは繰り返し発生する同一作業をCursorに登録しておくことで再利用を可能にする概念で、外部の天才エンジニアが公開しているルール・スキルを活用することで開発品質を急速に高められるとされた。</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>セッションの全体像と背景</h3>
+<p>この録音はSpeaker Aが複数の参加者（Speaker B、D、E、Fなど）に対して、Cursorを用いたAI開発の効率化手法を解説しているワークショップまたはハンズオン形式のセミナーの一部である。参加者はすでにCursorを使って何らかの開発作業を行っており、Speaker AはそのファシリテーターないしインストラクターとしてTIPSを説明している。前川はこのセッションの聴講者であると判断される（発言が確認できない）。</p>
+<p>Speaker Aは冒頭で「開発をいかに楽にするかというゲームになってくる」と述べ、参加者に対してあえてヒントを少なくした状態でやらせていることを明かす。これは自力でトライアルアンドエラーをすることで「こんなにエラーが出るのか」という実体験を先に持たせ、その上で効率化の概念を導入するという教育的意図があることが示唆される。また、Claudeのバージョンが現時点で4.6になっておりエラーは以前より減っているが、それでもエラーは残存するという現状認識が共有された。</p>
+<p>---</p>
+<h3>ルールズ（Rules）の概念と実装方法</h3>
+<p>Speaker Aが最初に解説したのが「ルールズ（Rules）」という概念である。これは開発を楽にするためのルールをCursorに対して登録し、そのルールに沿って自律的に行動させるという仕組みである。「普通の会社組織の行動規範と一緒」という比喩が用いられており、「うちのタスクをやるときのルールはこれだから、全員必ず守ってください」という組織運営の論理をAIエージェントに適用するイメージである。</p>
+<p>具体的なルールの例として、Speaker Aが最初に思いついたものが「テスト自動化ループ」である。通常、開発後には自分でアプリの画面を動かしてテストし、エラーが出たらスクリーンショットを撮って修正を依頼するというフローが必要だが、これを全てCursorにやらせるルールを作った。具体的には「画面を動かして自分でテストせよ」→「エラーが出たらスクリーンショットを撮れ」→「改善フローで修正せよ」→「もう一度テストせよ」というループをCursorが自律的に回すよう指示するルールを登録する。これにより開発者は放置して他の仕事ができるようになると説明された。</p>
+<p>ただし実際にこれをやってみると「同じエラーが一生直らない」というパターンが発生することが明かされた。何度ループしても直ってこないケースへの対処法として、Speaker Aは以下のエスカレーションルールを作成した：</p>
+<ul>
+<li>まずClaude 4.6で3回改善ループを回す</li>
+<li>3回直らなかった場合はClaude o3（o3.5）に切り替えて再度3回ループを回す</li>
+<li>それでも直らなかった場合は「諦める」</li>
+</ul>
+<p>このルールにより、同じエラーに永遠に時間を費やすことなく、開発者は自動処理の結果を待つだけで済む構造が作れるとされた。</p>
+<p>ルールズの登録方法については、CursorのUIである「Cursor Settings」の中に「Rules」ボタンが存在しており、Cursorに対して「このルールを今後も使い回したいから登録しておいて」と自然言語で指示するだけで登録される仕組みである。一度Cursor Settingsに登録されたルールは、以後のすべての開発プロジェクトに自動適用される。</p>
+<p>また、ルールズは自分で考えるだけでなく、世の中の天才エンジニアたちが公開しているルールを活用するという方法も紹介された。特にX（旧Twitter）では優秀なエンジニアが良いルールを公開しており、それを「教え合う文化」として共有していると言及。Speaker A自身はそれらの記事の内容を完全には理解できなくても、「なんか合理的な気はする」という感覚で記事をCursorに貼り付けて「ここからいいルールを作ってくれない？」と依頼する方法を取っており、Cursorが自動的にその記事の内容を解釈してルールを生成するという手順が説明された。トップクラスの開発者が活用しているルールの例として「品質チェックAIエージェント」「コードエラーチェックAIエージェント」「エラー自律改善ループシステム」などが挙げられた。</p>
+<p>---</p>
+<h3>スキルズ（Skills）の概念と実装方法</h3>
+<p>次に解説されたのが「スキルズ（Skills）」という概念である。これはCursorを使っていると発生する「毎回同じような作業をしているな」というパターンを検出し、その作業をスキルとして登録しておくことで再利用を可能にする仕組みである。</p>
+<p>具体的な例として、2個目・3個目・4個目とツールを作っていく中で「いつも同じAPIを設定しているな」「同じ手順を繰り返しているな」というパターンが出てきたときに、「これをスキルとして登録しておいて」とCursorに指示するだけで登録が完了する。以後は登録されたスキルを参照して同様の作業を自動実行してくれる。</p>
+<p>スキルズもルールズと同様に外部の公開資産を活用できると説明された。具体的な例として「デザインセンスが優れたエンジニアが公開している優れたデザインスキル」を取得し、「これをスキルとして入れておいて」とCursorに指示した瞬間から、そのスキルを使ってデザインが自動的に高品質になるというシナリオが紹介された。これはSpeaker Aが「スキル集めゲーム」と表現するように、優良スキルを集積することで開発品質が指数的に向上するという考え方である。</p>
+<p>---</p>
+<h3>AIを「育成ゲーム」として捉える哲学</h3>
+<p>Speaker Aはルールズとスキルズを通じて、「これからのAIはシミュレーションじゃなくて育成ゲームだ」という独自の哲学を語った。Cursorをいかに良いルールを持たせ、いかに良いスキルを与え、優秀な子に育てるかというメタファーで開発者の役割を再定義している。</p>
+<p>人間の教育との比較として「人を育てる場合はルールを教えても守らないし、スキルを教えても忘れたりできないと言い出す。教育に時間がかかる」と述べる一方で、AIは「一発で覚える」と評価。ただし、メモリの問題で「たまに忘れてしまう」こともあり、その場合は「お前こういうスキルあったじゃん、思い出せよ」と指示すれば対応できると説明された。全体として人間の部下を教育するより圧倒的に低コスト・低ストレスであるという結論が示された。</p>
+<p>---</p>
+<h3>ウェブブラウザ不要論とCursor完結型ワークフロー</h3>
+<p>やや脱線した話題として、「自分一人で作業をこなすパソコンだけの環境では、ウェブブラウザは究極いらない」というSpeaker Aの気づきが共有された。通常、ウェブアプリケーションはブラウザを通じて使うが、APIをCursorに与えて「このリサーチをしてくれないか」と投げたところ、ブラウザなしでも結果が全て出てきたという実体験が紹介された。</p>
+<p>これをさらにスキルとして登録しておくことで、「必要なAPIを渡しておけば、自分がやりたいことをCursorが先回りしてスキルを駆使して全部代わりにやってくれて、Cursor内で完結する」という世界線が描かれた。ただし、この域に達するためには先に複数のツール開発を経験しておく必要があり、「文字起こしではこういうところで引っかかるんだ」という具体的な概念・つまずきのパターンを体で理解していることが前提になると補足された。</p>
+<p>Speaker Aは参加者に対し「暇な時間に2個、3個、4個、5個、6個、7個と開発を続けてほしい。良いルールと良いスキルとは何かにアンテナを張り、見つけたら登録し続けるゲームをやってください」と締めくくった。</p>
+<p>---</p>
+<h3>自分の分身AI・コンサルAIの構築（質疑応答パート）</h3>
+<p>Speaker Fがコンサルへの応用について質問した。「コンサルで相談が来るときにAIを絡めているか？」という問いに対してSpeaker Aは「今のところしていないが、分身AIを作ろうという発想はある」と回答。</p>
+<p>具体的な構想として、AIが自分（Speaker A）の様々なナレッジやスキルを参照し、「この人ならこう回答するだろう」という推論をさせて自律回答させる「分身AI」の構築が語られた。ただし、実際に本人が回答しているわけではないため「期待値調整」が必要であり、「このキャラクターに聞けばすぐ返ってくるが、本人が回答しているわけではない。それなりに良い壁打ち相手にはなる」というポジショニングで提供することを想定していると説明された。「それで納得できない、もしくは本当に聞きたかったら本人に来てもらう」（Speaker Fの補足）というファネル設計であることも示唆された。</p>
+<p>さらに別のアプローチとして、過去のコンサル相談の録音データを活用したデータベース構築が紹介された。過去の相談内容には「似たような質問が多い」という観察から、以下の手順が説明された：</p>
+<p>1. 過去の録音データを大量に入力し、AIに読み込ませる</p>
+<p>2. AIが質問をカテゴリ分けし、異なる質問グループを自動生成する</p>
+<p>3. 自分の問答集を作成する</p>
+<p>4. 自分のセミナー録画データも合わせて入力し、思想・考え方のベースを与える</p>
+<p>5. 問答集＋思想ベースの2つを組み合わせて回答を生成させる</p>
+<p>Speaker Aはこのシステムをすでに構築しており「精度上げ中」であると明かした。</p>
+<p>---</p>
+<h3>MCP（Model Context Protocol）についての補足</h3>
+<p>セッションの最後にSpeaker Aが技術的な補足として「CursorにMCPを使っていいか？と聞いてくることがあったら、使っていいよと答えてください」とアナウンスした。MCPが何かわからない参加者に対しては「ChatGPTに聞いてください」と簡潔に回答。これはハンズオン中に参加者が遭遇しうる具体的な操作上の注意点として共有された。</p>
+<p>---</p>
+<h3>本日のセッションで参加者に課されたタスク</h3>
+<p>Speaker Aは参加者に対して以下を明示的に指示した：</p>
+<ul>
+<li>今日中に少なくとも1つのツールを本番環境（本番デプロイ）にアップすること</li>
+<li>エラーを潰し切ってからデプロイすること</li>
+<li>時間がある人は2ツール目、3ツール目も開発を継続すること</li>
+<li>ルールズ・スキルズを取り入れてみること</li>
+<li>どういうルール・スキルを入れればいいかわからない場合はSpeaker Aに質問してよいこと</li>
+</ul></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>開発をいかに楽にするかという工夫のゲームになる。そのための概念が「ルールズ」と「スキルズ」の2つ。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>ルールズとは開発を楽にするルールをCursorに登録し、そのルールに沿って自律的に行動させる仕組み。会社の行動規範と同じ発想。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>テスト自動化ループの具体ルール：画面を動かしてテスト→エラーをスクリーンショット→改善→再テストのサイクルをCursorに自律的に回させる。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>同じエラーが3回直らなかったらClaude o3に切り替え、それでも3回直らなかったら諦めるというエスカレーションルールを作ることで、開発者は放置して他の作業ができる。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>良いルールはXで天才エンジニアが公開している。記事をCursorに貼って「いいルール作って」と言えばいい。自分で内容を完全理解する必要はない。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>スキルズとは繰り返し発生する同一作業をCursorに登録しておく仕組み。「スキルとして登録しとけ」と言うだけで登録される。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>AIはシミュレーションではなく育成ゲーム。Cursorに良いルールを持たせ、良いスキルを与えて優秀に育てることが開発者の役割。人間の教育と違い一発で覚える。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>自分一人の作業環境ではブラウザは究極不要。APIをCursorに与えて指示すれば、Cursor内で全てが完結する世界線が実現できる。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>分身AIの構想：自分のナレッジを参照してAIが回答する仕組み。期待値調整として「本人が回答しているわけではない、壁打ち相手」としてポジショニングする必要がある。すでに構築済みで精度上げ中。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>過去のコンサル相談録音データをAIに読み込ませ、問答集＋自分のセミナー録画データを組み合わせて分身AIの精度を高めるアプローチを実践中。</div>
+<div class="quote-block"><span class="timestamp">[不明]</span> <strong>Speaker A</strong><br>CursorがMCPを使っていいか聞いてきたら「使っていいよ」と答えてよい。MCPが何かわからない場合はChatGPTに聞くこと。</div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">アクションアイテム</h2>
+  <table class="data-table"><thead><tr><th>担当</th><th>タスク</th><th>期限</th><th>ステータス</th></tr></thead><tbody><tr><td>参加者全員</td><td>今日中に少なくとも1つのツールを本番環境にデプロイする</td><td>当日中</td><td><span class="status-pending">未着手</span></td></tr>
+<tr><td>参加者全員</td><td>時間がある人は2ツール目・3ツール目以降も開発を継続する</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr>
+<tr><td>参加者全員</td><td>ルールズとスキルズを開発に取り入れ、良いルール・スキルを見つけたらCursorに登録し続ける</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr></tbody></table>
+</div>
+
+<div class="section">
+  <h2 class="section-title">抽出されたナレッジ</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    ナレッジを表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <h3 class="section-subtitle" style="color:#ea4335;">第三者の知見</h3><div class="knowledge-card" style="border-left-color:#ea4335;"><h4>CursorのルールズによるAI開発自動化</h4><div class="knowledge-source">発言者: Speaker A</div><p>Cursorを使ったAI開発では「ルールズ（Rules）」という概念が重要。これは開発を楽にするためのルールをCursorに登録し、そのルールに沿って自律的に行動させる仕組みで、会社の行動規範と同じ発想。具体的なルール例として「テスト自動化ループ」がある：①画面を動かしてテスト→②エラーが出たらスクリーンショットを撮る→③改善する→④再テスト、のサイクルをCursorが自律的に回す。また、同じエラーが3回直らなかったらClaude o3に切り替え、それでも3回直らなかったら諦めるという「エスカレーションルール」により、開発者は放置して他の作業ができる。ルールはCursor SettingsのRulesボタンから登録可能で、一度登録すれば全プロジェクトに自動適用される。自分でルールを考えるだけでなく、Xで天才エンジニアが公開している優良ルールを記事ごとCursorに貼り付けて「いいルール作って」と指示することで、内容を完全理解しなくても活用できる。</p></div>
+<div class="knowledge-card" style="border-left-color:#ea4335;"><h4>CursorのスキルズによるAI開発の再利用性向上</h4><div class="knowledge-source">発言者: Speaker A</div><p>Cursorには「スキルズ（Skills）」という概念があり、繰り返し発生する同一作業をCursorに登録しておくことで再利用を可能にする仕組みである。複数のツールを開発していく中で「いつも同じAPIを設定しているな」「同じ手順を繰り返しているな」というパターンが出てきたときに、「スキルとして登録しとけ」と自然言語で指示するだけで登録が完了する。以後は登録されたスキルを参照して同様の作業を自動実行してくれる。スキルズも外部の公開資産を活用でき、デザインセンスが優れたエンジニアが公開している優れたデザインスキルを取得してCursorに登録するだけで、そのスキルに基づいた高品質なデザインが自動的に実現する。「スキル集めゲーム」として捉えると、優良スキルの集積により開発品質が向上する。</p></div>
+<div class="knowledge-card" style="border-left-color:#ea4335;"><h4>AIを「育成ゲーム」として捉えるCursor活用哲学</h4><div class="knowledge-source">発言者: Speaker A</div><p>Speaker Aは「これからのAIはシミュレーションではなく育成ゲームだ」という哲学を提唱。CursorというAIをいかに良いルールを持たせ、良いスキルを与え、優秀な存在に育てるかが開発者の本質的な役割だという考え方。人間の部下と比較すると、人間はルールを教えても守らず、スキルを教えても忘れたりできないと言い出すため教育に時間がかかるが、AIは一発で覚える。ただしメモリの問題でたまに忘れることがあり、その場合は「このスキルを持っていたはず、思い出せ」と指示すれば対応できる。AIを使いこなすには先に実際の開発経験を積むことが前提で、「つまずきのパターンを体で理解している」ことがスキルズの効果的な活用につながるとされた。</p></div>
+<div class="knowledge-card" style="border-left-color:#ea4335;"><h4>Cursor完結型ワークフローとブラウザ不要論</h4><div class="knowledge-source">発言者: Speaker A</div><p>通常、ウェブアプリケーションはブラウザを通じて使用するが、自分一人の作業環境では「ブラウザは究極いらない」というSpeaker Aの気づきが共有された。APIをCursorに与えて「このリサーチをしてくれないか」と投げるだけで、ブラウザなしでも結果が全て返ってくることを実体験から発見した。これをスキルとして登録しておくことで、「必要なAPIを渡しておけば、自分がやりたいことをCursorが先回りしてスキルを駆使して全部代わりにやってくれて、Cursor内で完結する」という世界線が実現できる。ただしこの域に達するには複数の開発経験を積み、各ツールのつまずきポイントを体で理解していることが前提となる。</p></div>
+<div class="knowledge-card" style="border-left-color:#ea4335;"><h4>分身AIと過去データ活用によるコンサルAI構築手法</h4><div class="knowledge-source">発言者: Speaker A</div><p>Speaker Aが構築・検討中の分身AI構想：自分のナレッジやスキルを参照してAIが「この人ならこう回答するだろう」と推論し、自律的に回答するシステム。重要な設計思想として「期待値調整」があり、本人が回答しているわけではないため「分身AIキャラクター」として明示し、「それなりに良い壁打ち相手になるが本人ではない」とポジショニングする必要がある。「それで納得できなければ本人に来てもらう」という二段階ファネルの設計。
+
+具体的な構築手順：①過去のコンサル相談録音データを大量に入力→②AIが質問をカテゴリ分けして質問グループを自動生成→③自分の問答集を作成→④自分のセミナー録画データも合わせて投入し思想・考え方ベースを付与→⑤問答集＋思想ベースの2つを組み合わせて回答を生成。Speaker A自身すでにシステム構築済みで精度向上中とのこと。</p></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <p>**Speaker A**: まず、開発をいかに楽にするかという工夫をするかっていうゲームになってくるんですね。あえて皆さんには、ヒントが少ない状態の中でやってもらってるんですよ。</p>
+<p>**Speaker A**: これぐらい出るんだ、みたいな。</p>
+<p>**Speaker A**: 今Claudeの4.6になってるので、そもそもエラーは減ってるんですけど、それでもまだエラーは残る。それをいかにして楽にするかという工夫の話をするときに、出てくるのが「ルールズ」という概念と「スキルズ」という概念の2つです。これが何なのかという話なんですけど、ルールズとは何かというと、要するに開発を楽にするためのルールを決めて、そのルールに沿って行動してもらうということです。</p>
+<p>**Speaker A**: 普通の会社組織と一緒です。</p>
+<p>**Speaker A**: 「うちの会社の行動規範はこれだから」「うちのタスクをやるときのルールはこれだから」というのを、全員必ず守ってくださいというルールを作ってしまう、ということです。</p>
+<p>**Speaker A**: じゃあ例えばどういうルールを作れば楽になるのかというときに、僕が最初に思いついたルールが何だったかというと、例えば開発したらテストしなきゃいけないんだけど、自分でエラーテストするのがめんどくさくなってしまったから、テストを代わりにやってもらう。画面を動かして自分でテストしてと。そしたらエラーが出てくるわけですよね。</p>
+<p>**Speaker A**: エラーを見つけたら、自分でスクショを撮ってるわけじゃないですか。その代わりにお前らが</p>
+<p>**Speaker A**: スクショを撮れと。スクショを撮って、そしたら改善のフローでもう一回改善しようと。</p>
+<p>**Speaker A**: 改善したらもう一回ここでループして、もう一回テストして画面を動かして改善しようっていうのを、ここを自動ループ化させるというルールを作ります。</p>
+<p>**Speaker B**: ふむふむ。</p>
+<p>**Speaker A**: このルールを持たせておけば勝手にやるわけです。</p>
+<p>**Speaker A**: ただ、実際これをやってみると、また起きることがあって、同じエラーが一生直らないというパターンがあるんですよ。何回やっても全然直してこないな、みたいな時が起きるので、じゃあ同じエラーが3回直らなかったら、</p>
+<p>**Speaker A**: 3回直らなかったらClaudeのo3.5に切り替えて、もう1回この改善ループを回せと。</p>
+<p>**Speaker A**: だからまずClaudeの4.6で3回動かして治らなかったらClaude o3に行け、3回動かしても治らなかったらそれは諦めろ、みたいな感じで、そうすると放置して他の仕事ができる、みたいな感じですね。そういうルートを作ってしまえというのが、ルールズという考え方なんです。</p>
+<p>**Speaker A**: で、ルールズはどういう風に作ればいいのかという話なんですけど、シンプルでCursorに対してこういうルールを作れ、これをルールとして登録しろ、</p>
+<p>**Speaker A**: と言うだけです。</p>
+<p>**Speaker A**: そのルールズが良いルールだった場合、これは他の開発のときにも使い回したいよねという発想になるわけで、そうなってくると、さっきの右上のちっちゃい歯車、「Cursor Settings」というところを最初にもらったんですけど、「Run Auto Run」とかCursorセッティングのところに、実はルールズボタンがあるんですよ。そこに登録してくださいというだけです、Cursorに。</p>
+<p>**Speaker A**: それに対して「これいいルールだから今後も使い回したいからルールとして登録しといて」と言えば入れます。そうすると他の開発のときも全部それが適用されるというのがルールズです。このルールズというのは……あ、誰か入っちゃったすいません。誰か覗いてもらってた。</p>
+<p>**Speaker A**: えっと、このルールズというのは、もちろん自分たちでそうやって考えてもいいんだけど、世の中には天才エンジニアがいっぱいいるはずなんですよ。天才エンジニアたちがいっぱい良いルールを編み出してるはずなんですよ。</p>
+<p>**Speaker A**: それをよくXでは、すごい</p>
+<p>**Speaker A**: 天才のエンジニアさんが良いルールを公開してくれてます、みたいなのがXとかにポロッとあったりするんですよね。エンジニアの人たちってそういうのを教え合うという文化があって、我々の世界ではそれを売るということ。でもこのサイトは売るんじゃなくて教え合うという文化になっているから、それをありがたく頂戴して、僕だったらそのなんかいい記事、</p>
+<p>**Speaker A**: 記事とかそういうのを解説してくれている記事を見つけたら、この記事をCursorにパーっと貼り付けて、「こんな記事があったんだけど、ここからいいルール作ってくれない？」みたいな感じで、「わかりました」という感じでやらせる、みたいな感じです。僕はその記事を読んでも分からないんですよ。「何言ってんの」みたいな、なんか合理的な気はするみたいな。</p>
+<p>**Speaker A**: やっぱりその開発トップクラスの人たちになればなるほど、品質チェックAIエージェントとか、コードエラーチェックAIエージェントとか、エラーを見つけたらさっきの自律改善するループシステムとか、みんなそれぞれよくわからないルールをいっぱい作ってるんですよ。それを全部、記事を見つけたらやって、ルールに統合させると開発がどんどん楽になるぞという世界線が語られてるんですよ。</p>
+<p>**Speaker A**: で、もう一個はスキルズという概念があって、例えばこれ、開発しているときだけの話じゃないんですけど、</p>
+<p>**Speaker A**: Cursorを触っていて、「これ今似たような作業してるな」という場面が何回も開発していると出てきたりするんですよ。それは例えば、2個目のツールを作ろう、3個目のツールを作ろう、4個目のツールを作ろうってなったときに、</p>
+<p>**Speaker A**: 「いつも同じAPIを設定してるな」とか、「なんか同じような作業をめっちゃしてるな」みたいなパターンが出たときに、その同じような作業をもう</p>
+<p>**Speaker A**: いちいちやり取りするのが面倒くさいから、これもスキルとして登録しておけと。「スキルとして登録しとけ」って言えば「わかりました、これスキルにしておきます」と言って、一度登録されたものはそのスキルを参照して同じ作業を実行してくれるというのがあります。これは開発でも</p>
+<p>**Speaker A**: Cursor開発用に作られたものなんですけど、同じようにこのスキルズというものもいろんな人たちが公開してくれてたりするんですよ。だから例えば、めちゃめちゃデザインセンスがいいエンジニアさんの中で、いいデザインスキルを持っています、みたいな人がいたときに、いいデザインのスキル</p>
+<p>**Speaker A**: をもし皆さんがゲットして、Cursorに「これスキルとして入れておいて」と言ったら、もうその瞬間からそのスキルを使って、めちゃかっこいいデザインになるんですよ。そういうスキル集めゲームになってくるわけです。</p>
+<p>**Speaker A**: これからのAIはシミュレーションじゃなくて育成ゲームだと。このCursorちゃんをいかに良いルールを持たせ、いかに良いスキルを与え、いかにそれで優秀な子に育ててあげるか、みたいな。しかも素晴らしいのが、人を育てるときはルールを教えても守らないし、スキルを教えてもすぐ忘れたりできないとか言い出すし、マジで教育に時間がかかるなって感じ</p>
+<p>**Speaker A**: ですけど、こいつらは一発で覚えるんで、登録しとけばやります。もちろんメモリの問題があって、たまに忘れちゃったりとかするんですけど、忘れてた時は「お前こういうスキルあったじゃん、思い出せよ」って言ったら「忘れてました」みたいな感じで使うんですが、だいぶストレスないですね。</p>
+<p>**Speaker A**: そういうことをどんどん登録していく。もっと極端なことを言うと、今そのウェブのブラウザを作っている理由って、もちろん自分も見やすいし、あとは他社と共有し合う、自分のスタッフとか仲間と共有し合うときというのは、絶対ウェブのブラウザがあった方が楽だと思うん</p>
+<p>**Speaker D**: ふむ。</p>
+<p>**Speaker A**: ですけど、ただ正直、自分一人が作業をこなす</p>
+<p>**Speaker A**: パソコンだけだったら、ウェブブラウザなんて究極いらないということに、ある日気づく瞬間があって。例えばウェブのアプリケーション、ブラウザなしにして、自分がやりたいリサーチって、例えばAPIを与えてしまえば勝手に開発して、このリサーチをしてくれないかってCursorに投げたらどうなるんだろうということを、ある日僕は思いついて。それをやったら、別にウェブブラウザなしに全部出してくるわけですよ、結果を。</p>
+<p>**Speaker A**: それで自分の作業自体を進めることができる。それをまたスキルにしておくと、一回スキルにしておいたら、必要なAPIを渡しておけば、自分がやりたいことをCursorが先回りしてスキルを駆使して全部代わりにやってくれて、Cursor内で完結してくれるという世界線になってくるんですね。とはいえ、</p>
+<p>**Speaker A**: まずいろいろ開発してみた方が、「こんなこともできるんだ、あんなこともできるんだ」「こういうことをやるときにだいたいこういうところでつまずくんだ」「文字起こしってこういうところで引っかかるんだ」っていう概念が入っている方が、スキルズもうまく使えるようになってくるので、まずは開発を2個、3個、4個、5個、6個、7個って暇な時間にやっていって、いいルールと</p>
+<p>**Speaker A**: いいスキルとは何かということに、ちょっとアンテナを張って、「Cursorに登録しとけ、登録しとけ」と言い続けるというゲームですよ、という話です。</p>
+<p>**Speaker A**: 大丈夫ですか。というわけで、引き続きちょっと開発はしてもらって、できれば今日、少なくとも1個は必ず本番環境デプロイ、本番環境にアップするというのは必ず1ツールやってもらいたいので、なるべくエラーを潰して、それをやってみてください。あと、本番環境に上げるのは1回だけでもやればだいたいわかると思うけど、2ツール目、3ツール目も時間がある人はどんどん開発してもらって。</p>
+<p>**Speaker A**: ルールとかスキルとかのこともぜひ取り入れてもらいたいんですけど、どういうルールを取り入れたらいいか、どういうスキルを取り入れたらいいかわからないという人は、</p>
+<p>**Speaker E**: ふむふむ。</p>
+<p>**Speaker A**: 聞いてもらっても構いません。</p>
+<p>**Speaker A**: では続けましょう。</p>
+<p>**Speaker F**: あの、コンサルとかで変身するとき（相談に来る人が）いろいろ多いと思うんですけど、それってなんかAIを絡めたりしてますか？</p>
+<p>**Speaker A**: 今んとこしてないですね。</p>
+<p>**Speaker F**: あ、実はしてないんですね。</p>
+<p>**Speaker A**: 今んとこしてないですけど、</p>
+<p>**Speaker A**: 分身を作れるようにしようという発想はあって、</p>
+<p>**Speaker F**: はい。</p>
+<p>**Speaker A**: それは例えばなんですけど、AIが僕のいろんなナレッジとかスキルを参照して、「これに対してはこういう回答をするのがらしいな」って考えさせて、AIに勝手に回答させるみたいな。</p>
+<p>**Speaker A**: ただ、期待値調整をしておかないといけないので、</p>
+<p>**Speaker A**: なんかそういう、自分の分身AIみたいなキャラクターにしておいて、そいつ</p>
+<p>**Speaker F**: ふむ。</p>
+<p>**Speaker A**: に聞けばすぐ返ってくるけど、本人が回答してるわけじゃないからね、みたいな。</p>
+<p>**Speaker F**: ああ。</p>
+<p>**Speaker A**: それなりにいい壁打ち相手にはなるよ、みたいな。</p>
+<p>**Speaker A**: そういうものはすでに作ってます。</p>
+<p>**Speaker F**: だから、それで納得できない、もしくは本当に聞きたかったら、もちろん来てね、みたいな感じ。</p>
+<p>**Speaker A**: そうですね。なんか、色々工夫はしたいですけどね。</p>
+<p>**Speaker A**: でも、全然別の方向で言うと、過去の相談の内容って過去の質問と似たようなものも多くて、そこからデータベースを作るのは案外簡単で。過去の録音データとかをいっぱい入れて、それをAIに読み込ませておいて、自分が使いたいシステムを開発してしまえばいいわけなんですよね。</p>
+<p>**Speaker A**: そのデータベースを使って、AIが質問をカテゴリ分けして、異なる質問グループを作ってくれる。</p>
+<p>**Speaker A**: 自分の問答集と、あとはそれがどういう思想や考え方に基づいていて、いつもこういう回答をしているのかという参考になりそうな、自分のセミナーみたいなものの録画データとかも全部ぶち込んでおいて、この2つ合わせて回答してみて、みたいな。</p>
+<p>**Speaker A**: そういうのはもうやってますね。</p>
+<p>**Speaker A**: 精度上げ中ですね、今。</p>
+<p>**Speaker A**: （退席・入室などの雑談）</p>
+<p>**Speaker A**: Cursorに代わりに画面を動かしてやらせるとなった場合に、そういう指示をするとMCPを使っていいか？と聞いてくることがあると思うんですけど、使っていいよと答えてあげてください。</p>
+<p>**Speaker F**: ふむふむ。</p>
+<p>**Speaker A**: はい。</p>
+<p>**Speaker A**: MCPってなんだろうと思った人は、ChatGPTに聞いてください。</p>
+    </div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/03/09 23:56
+</div>
+
+</div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
+</body>
+</html>
