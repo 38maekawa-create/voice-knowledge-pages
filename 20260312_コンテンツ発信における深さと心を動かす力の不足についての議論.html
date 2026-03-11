@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>コンテンツ発信における「深さ」と「心を動かす力」の不足についての議論</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>コンテンツ発信における「深さ」と「心を動かす力」の不足についての議論</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年03月12日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">不明</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">前川, パグ</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#34a853;">参加者</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">philosophy</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">#コンテンツ設計</span> <span class="badge badge-tag">#発信戦略</span> <span class="badge badge-tag">#パラレルキャリア</span> <span class="badge badge-tag">#ワードチョイス</span> <span class="badge badge-tag">#問題提起</span> <span class="badge badge-tag">#心を動かす</span> <span class="badge badge-tag">#正論の限界</span> <span class="badge badge-tag">#視座</span> <span class="badge badge-tag">#マーケット理解</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>パラレルキャリア系の発信者が表層的な主張を繰り返すだけで、視聴者の心に響くコンテンツを作れていない問題について議論された。</li>
+<li>前川とパグが、正論だけでは人は動かず、視座の高さ・言葉の濃度・ワードチョイスが重要であるという認識を共有した。</li>
+<li>バズトレンドを構造化し自分ごと化させる問題提起の流れと、発信者自身がマーケットに向き合う必要性が語られた。</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>パラレルキャリア系発信者のコンテンツの浅さと限界</h3>
+<p>前川は冒頭で、幅広くやっている人の話を聞くこと自体に興味が持てないと率直に述べた上で、パラレルキャリア的な活動をしている人の存在自体はコンテンツ力になりうるが、そうした発信者がなかなか出てこない現状に触れた。パグはこれに同意し、パラレルキャリアや資本主義系の話題を深く語れる発信者が少なく、結局「表層のところしか語れない」と指摘した。</p>
+<p>前川はこの問題を「毎回言ってることが結構同じ」と表現した。具体的には、「今の時代、企業一本足はもうダメだよ」という主張を繰り返しているだけで、切り口を変えても結局同じ主張・同じフレームワークに帰結してしまうというパターンを指摘した。つまり、表面的なバリエーションはあっても、根本的な論理構造や提供する価値が変わらないため、受け手にとっては何度聞いても刺さらない状態が続いているということである。</p>
+<p>前川はさらに「そこに教育もなければ何もない」と述べ、発信が単なる正論の繰り返しにとどまり、視聴者の成長や行動変容につながる教育的要素が欠如していることを問題視した。パグもこれに強く同意し、「正論で人は動かない」「心に至らない」と表現した。つまり、論理的に正しいことを言っているだけでは、視聴者の危機意識や問題意識を本当の意味で動かすことはできないという共通認識が二人の間で確認された。</p>
+<p>パグは「みんなそこで終わっちゃう」と述べ、多くの発信者が思考停止的にこのパターンに陥っていることを指摘した。実績を出している人が多いという事実もあり、視聴者側も「何となく分かったような分かってないような感じ」で終わってしまっている。つまり発信者側のコンテンツの浅さと、受け手側の危機意識の薄さが相互に作用して、表層的な情報消費で完結してしまう構造が生まれているという分析である。</p>
+<h3>求められる視座・濃度・ワードチョイスの水準</h3>
+<p>パグは何らかの具体的なコンテンツ（前川に見せていた資料や事例と思われるもの）を参照しながら、「こういうのを語れないと刺さらない」と述べ、求めるコンテンツの水準を示した。パグが求めているのは「この視座とこの濃度で語ってほしい」というレベルのものであり、単なる情報提供ではなく、深い洞察と高い視座に基づいた濃密なコンテンツである。</p>
+<p>前川はこれに対して「ワードチョイスももう少しハッとくるようなものにしたいな」と個人的な課題認識を述べた。普段のアウトプットにおいて、サラリーマンの日常的な要素をパンチライン（印象的な決め台詞や鋭い一言）として入れることはあるものの、それが通常の発信全体には反映されていないという問題意識である。つまり、たまに鋭い表現が出ることはあっても、コンテンツ全体の水準として「ハッとさせるワードチョイス」が一貫して維持されていないということを前川自身が認識している。</p>
+<p>パグもこの点に「めちゃくちゃ分かります」と共感し、記事なども同様に印象に残らない（気にならない）状態であることを確認した。ここでの議論のポイントは、コンテンツの質を決めるのは情報の正確さや論理性だけではなく、「視座の高さ」「語りの濃度」「ワードチョイスの鋭さ」という表現・伝達の次元であるということである。</p>
+<h3>コンテンツ構造の理想形：トレンドの構造化→自分ごと化→主張</h3>
+<p>前川はコンテンツとして理想的な流れを明示的に言語化した。その構造は以下の通りである：（1）みんなが持っている・バズっているトレンドを構造化する、（2）それを視聴者に自分ごとにさせる問題提起をする、（3）その中で「こうしなきゃダメだよね」という主張を入れていく、という三段階の流れである。</p>
+<p>この構造は、単にトレンドを紹介するのでもなく、一方的に主張を押し付けるのでもない。まずトレンドという共通の関心事をフックにし、それを分析的に構造化することで知的な価値を提供し、さらにそれを「あなたの問題でもある」と自分ごと化させることで感情的な関与を引き出し、最終的に行動を促す主張につなげるという、認知→関与→行動の流れを意識した設計である。</p>
+<p>しかし前川は同時に「それってどうやったら伝わるか」「その思いで人を動かせるか」という実行面での難しさも率直に問いかけた。これに対してパグは「難しいところ」と認めつつも、一つ重要な前提条件を提示した。それは「発信者自身がマーケットに向き合うということは絶対的に必要」だということである。つまり、コンテンツの構造やテクニック以前に、発信者が自分の発信対象であるマーケット（市場・オーディエンス）に真剣に向き合い、その実態を深く理解していることが不可欠だという主張である。この「マーケットへの向き合い」がなければ、いくら構造を整えても表層的なコンテンツにとどまってしまうということが示唆されている。</p>
+<h3>「正論では人は動かない」という根本認識</h3>
+<p>本会話を貫く最も重要なテーマは、「正論・正しい情報だけでは人の心は動かず、行動変容は起きない」という認識である。パグが「正論で人は動かない」「心に至らない」と端的に表現し、前川も完全に同意したこの命題は、マーケティングやコンテンツ制作における根本的な課題を言い表している。多くの発信者が陥っている罠は、正しいことを言えば人は動くだろうという暗黙の前提であり、実際には視座・濃度・ワードチョイス・構造・マーケットへの向き合いといった多層的な要素が揃って初めて「心を動かす」コンテンツになるということが、この対話全体を通じて浮かび上がった結論である。</p></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[00:00:00]</span> <strong>前川</strong><br>パラレルキャリア的なことをやっている人自体がコンテンツ力になるが、そういう発信者がなかなか出てこない</div>
+<div class="quote-block"><span class="timestamp">[00:00:30]</span> <strong>パグ</strong><br>パラレルキャリアや資本主義系の話題は表層のところしか語れない発信者が多い</div>
+<div class="quote-block"><span class="timestamp">[00:00:50]</span> <strong>前川</strong><br>毎回言ってることが同じで、切り口を変えても結局同じフレームワークに帰結する</div>
+<div class="quote-block"><span class="timestamp">[00:01:43]</span> <strong>パグ</strong><br>正論で人は動かない。心に至らない</div>
+<div class="quote-block"><span class="timestamp">[00:02:15]</span> <strong>パグ</strong><br>本当の意味で見てる人たちの危機意識や問題意識が動くことがない。何となく分かったような分かってないような感じで終わっている</div>
+<div class="quote-block"><span class="timestamp">[00:02:52]</span> <strong>前川</strong><br>ワードチョイスももう少しハッとくるようなものにしたい</div>
+<div class="quote-block"><span class="timestamp">[00:03:40]</span> <strong>前川</strong><br>サラリーマンの日常的なことをパンチラインとして入れるが、普段のアウトプットにはそういうものが入っていない</div>
+<div class="quote-block"><span class="timestamp">[00:04:08]</span> <strong>パグ</strong><br>この視座とこの濃度で語ってほしい。このレベルのものを求めている</div>
+<div class="quote-block"><span class="timestamp">[00:05:02]</span> <strong>前川</strong><br>バズってるトレンドを構造化→自分ごとにさせる問題提起→主張を入れていく、という流れが理想</div>
+<div class="quote-block"><span class="timestamp">[00:05:02]</span> <strong>パグ</strong><br>発信者自身がマーケットに向き合うということは絶対的に必要</div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">アクションアイテム</h2>
+  <table class="data-table"><thead><tr><th>担当</th><th>タスク</th><th>期限</th><th>ステータス</th></tr></thead><tbody><tr><td>前川</td><td>普段のアウトプットにおけるワードチョイスの改善（ハッとさせる表現を一貫して取り入れる）</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr></tbody></table>
+</div>
+
+<div class="section">
+  <h2 class="section-title">抽出されたナレッジ</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    ナレッジを表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <h3 class="section-subtitle" style="color:#1a73e8;">マーケティング知見</h3><div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>正論では人は動かない──心を動かすコンテンツの条件</h4><p>論理的に正しい主張を繰り返すだけでは視聴者の行動変容は起きない。多くの発信者が「今の時代○○はダメ」という正論を切り口を変えて繰り返しているが、フレームワークが同じであるため受け手に刺さらない。心を動かすには、視座の高さ・語りの濃度・ワードチョイスの鋭さという表現次元の質が必要。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>コンテンツの三段構造：トレンド構造化→自分ごと化→主張</h4><p>効果的なコンテンツの流れは、（1）バズっているトレンドを構造化して知的な価値を提供し、（2）それを視聴者に自分ごとにさせる問題提起を行い、（3）「こうしなきゃダメだよね」という行動を促す主張を入れる、という三段階。この構造により認知→関与→行動の流れが生まれる。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>発信者のマーケットへの向き合いが不可欠</h4><p>コンテンツの構造やテクニック以前の大前提として、発信者自身がマーケット（市場・オーディエンス）に真剣に向き合い、その実態を深く理解していることが絶対的に必要。マーケットへの向き合いなくして表層的でないコンテンツは作れない。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>パンチラインの一貫性──普段のアウトプットへの反映</h4><p>鋭いワードチョイスやパンチラインが単発で出ることはあっても、普段のアウトプット全体に一貫して反映されていなければコンテンツの質は上がらない。ハッとさせる表現を意識的かつ継続的に取り入れることが課題。</p></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <h4>整形済み会話テキスト</h4>
+<p>---</p>
+<p>**前川**: （聞き取り不明）聞くけど興味はないんですよね。幅広くやってるとは思わないので。</p>
+<p>**パグ**: うん。</p>
+<p>**前川**: だからパラレルキャリア的なことをやっている人がいるじゃないですか。</p>
+<p>**パグ**: うん。</p>
+<p>**前川**: そういうのがすごい欲しいよね。パラレルキャリア自体がそのコンテンツ力みたいな部分があるけど。</p>
+<p>**パグ**: そう。でも出てこないじゃないですか、普通。それがさっきの話で、いわゆるそのパラレルキャリアだったりとか資本主義系のことをすごい深く語れるかって言ったら、結構表層のところしか語れないから。</p>
+<p>**前川**: それが本当にその通りで。だから毎回言ってることが結構同じなんですよね。</p>
+<p>**パグ**: そう、同じだから。「今の時代、企業一本足はもうダメだよ」っていうのを同じことを言ってる。</p>
+<p>**前川**: でも別にそれを何回言われても刺さらないじゃないですか。</p>
+<p>[00:01:12]</p>
+<p>**前川**: 一つの経験だったり、いわゆる語っている経験だったり、毎回切り口を変えても結局同じ主張になる。切り口は違うんだけど、毎回フレームワークが同じというか、そういう感じなんですよね。</p>
+<p>**パグ**: うん。</p>
+<p>**前川**: そこに教育もなければ何もないというか。</p>
+<p>**パグ**: 心に至らないじゃないですか。正論で人は動かないから。</p>
+<p>**前川**: そうですよね。</p>
+<p>[00:01:43]</p>
+<p>**パグ**: だからみんなそこで終わっちゃうんですよね。前川さんもそう思ってると思うんですけど、今みんな何も考えずにそこで終わってしまっている。心に響かないというか。</p>
+<p>**前川**: そうですね。</p>
+<p>[00:02:15]</p>
+<p>**パグ**: 本当の意味で、見てる人たちの危機意識だったりとか問題意識が動くことがないじゃないですか。</p>
+<p>**前川**: そうですね。</p>
+<p>**パグ**: 実績出してる人多いし、みたいな。だから何となく分かったような分かってないような感じで終わってるんですよね。</p>
+<p>[00:02:52]</p>
+<p>**パグ**: これさっきパグさんに見せてたんでしたっけ？別のやつかな。さっき言ったやつ？こういうのを語れないと刺さらないというか。</p>
+<p>**前川**: ワードチョイスももう少しハッとくるようなものにしたいなと個人的には思っています。</p>
+<p>**パグ**: めちゃくちゃ分かります。だから記事とかもあまり気にならないじゃないですか。</p>
+<p>**前川**: そうですね。</p>
+<p>[00:03:40]</p>
+<p>**前川**: サラリーマンが普通の日常的なことをパンチラインとして入れるんだけど、普段のアウトプットにはそういうものが入っていないんですよね。</p>
+<p>**パグ**: うん。</p>
+<p>[00:04:08]</p>
+<p>**パグ**: この視座というか、この視座とこの濃度で語ってほしいというか、このレベルのものを僕は求めているんで。</p>
+<p>**前川**: なるほど。</p>
+<p>[00:05:02]</p>
+<p>**前川**: コンテンツとして、みんなが持ってるバズってるトレンドみたいなものを構造化して、自分ごとにさせる問題提起をして、その中で「こうしなきゃダメだよね」っていうような主張を入れていく、その流れだと思うんですよね。</p>
+<p>**パグ**: うん。</p>
+<p>**前川**: それってどうやったら伝わるというか、その思いで人を動かせるか。</p>
+<p>**パグ**: それは難しいところなんですけど、もう一つ、本人に限らず発信者自身がマーケットに向き合うっていうことは絶対的に必要だと思っていて。</p>
+<p>**前川**: うん。</p>
+    </div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/03/12 08:53
+</div>
+
+</div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
+</body>
+</html>
