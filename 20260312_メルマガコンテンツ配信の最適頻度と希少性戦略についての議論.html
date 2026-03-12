@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>メルマガ・コンテンツ配信の最適頻度と希少性戦略についての議論</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>メルマガ・コンテンツ配信の最適頻度と希少性戦略についての議論</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年03月12日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">不明</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">前川, パグ</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#34a853;">参加者</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">philosophy</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">#メルマガ</span> <span class="badge badge-tag">#配信頻度</span> <span class="badge badge-tag">#希少性</span> <span class="badge badge-tag">#コンテンツ戦略</span> <span class="badge badge-tag">#マルチチャネル</span> <span class="badge badge-tag">#オプトイン</span> <span class="badge badge-tag">#エンゲージメント</span> <span class="badge badge-tag">#note</span> <span class="badge badge-tag">#X</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>前川とパグがメルマガやコンテンツ配信の最適な頻度について議論し、毎日配信より不定期で重厚な配信の方が読者のありがたみと開封率を高めるという結論に至った。</li>
+<li>川田氏のノート、堀江氏の毎日メルマガ、南波氏の不定期メルマガなど具体的な事例を挙げながら、「たまに来てガツンと殴られる」スタイルの有効性を確認した。</li>
+<li>前川のメルマガ運用方針として、オプトイン後10日間はやや多めに配信し、その後は不定期で重たい内容を届けるスタイルを採用する方向で合意した。</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>コンテンツ配信の最適頻度と希少性の価値</h3>
+<p>前川は、川田氏のノート（note）配信を高く評価する文脈から議論を始めた。川田氏のノートは不定期ではあるものの、月に4〜5本程度がある程度担保されており、この「不定期だが一定数が約束されている」状態に大きな価値があると前川は述べた。週1回あるかないかの頻度であるため、届いた時のありがたみが生まれるという点を強調している。</p>
+<p>これに対してパグは、堀江貴文氏のメルマガのように毎週（あるいは毎日）届くものは、逆に読まなくなるという現象を指摘した。前川もこれに同意し、毎日配信だと情報が薄まっていき、物理的に面白くなくなると述べた。その代わりに「たまに来てガツンと殴られるような、結構しっかりとしたボリューム感」の方が受け手として嬉しいという感覚を共有した。</p>
+<p>パグは川田氏の配信スタイルについてさらに掘り下げ、川田氏は「好きに書け」と言われている程度の自由度で運営しているにもかかわらず、一本一本に魂を込めているように見えると評価した。「こういう発見があったのかな」と思わせるような内容がたまにしか来ないからこそ、毎回の配信が高品質であり、結果としてオファー（セールス）が来ても気づかずに買ってしまうほど自然にコンバージョンが発生するという現象をパグは報告した。前川は「ああ、なるほど」とこの効果に納得を示した。</p>
+<p>この議論は、コンテンツマーケティングにおける「希少性」と「品質」のトレードオフに関する実践的な知見であり、毎日の大量配信よりも不定期の高品質配信が、読者のエンゲージメントとセールスコンバージョンの両方に効果的であるという結論に至っている。</p>
+<h3>前川のメルマガ運用方針の具体的設計</h3>
+<p>上記の議論を踏まえ、前川は自身のメルマガの運用方針を具体的に設計する方向へ話を進めた。前川が提示したプランは以下の通りである：</p>
+<p>1. <strong>オプトイン後10日間</strong>: サービス的な位置づけで、通常よりも多めに配信する。ただし、毎日配信ではない。「いつもより多め」だがあくまで毎日ではない頻度感を保つ。</p>
+<p>2. <strong>10日間以降</strong>: より不定期にし、たまに重たい内容で「殴ってくる」スタイルに移行する。</p>
+<p>パグはこの方針に対して、「YouTubeもやってきますもんね」と発言し、メルマガ以外のチャネル（YouTube）との兼ね合いも考慮すべきことを示唆した。前川はこれを受けて「あんまり一個のコンテンツを渋滞させてもっていうのはありますよね」と、複数チャネルでの配信が重なることによる受け手側の情報過多（渋滞）のリスクを認識した。パグが「それぞれが良い範囲で届くみたいな」とまとめ、前川は「それがベストですね、間違いなく」と合意した。</p>
+<p>この議論は、マルチチャネル（メルマガ・YouTube・X等）での配信戦略において、各チャネルの配信頻度を個別に最適化するだけでなく、チャネル間の総量としての受け手の処理能力を考慮する必要があるという重要な示唆を含んでいる。</p>
+<h3>X（旧Twitter）の短文投稿の有効性低下</h3>
+<p>前川は「Xでも、短文の投稿ってもうあまり意味がないですよね」と、X（旧Twitter）における短文投稿の効果が低下しているという認識を示した。パグは「多すぎると処理ができない」と、情報量過多の問題を指摘した。</p>
+<p>前川は堀江貴文氏の毎日メルマガを再度例に挙げ、「結局聞けてない」「毎日来て未読の山みたいな」と、毎日配信が実際には消化されていない現実を自身の体験として共有した。パグは「週1回とかだったら確かに、心が空いてる時にちゃんと聞ける」と、頻度を落とすことで受け手が心理的余裕を持って消化できるメリットを述べた。</p>
+<p>前川はさらに南波氏のメルマガを具体例として挙げ、「たまに届くと『あ、南波さんからメールが来てるわ』って言って見ますからね」と、不定期配信が受け手の注意を引く効果を自身の行動で証明した。パグはこれに対して「たまにだから『今見とかないと』ってなるじゃないですか。次いつ来るか分からないから」と、不定期配信が生む「今読まなければ」という緊急性（FOMO的効果）を指摘した。この「次いつ来るか分からない」という不確実性が、結果的に開封率とエンゲージメントを高める心理メカニズムとして機能していることが、二人の議論から明らかになった。</p>
+<h3>河野氏の発信に関する言及</h3>
+<p>前川は「めちゃくちゃ久しぶりに河野さんの発信で勉強になった」「『確かに』って気づきを与えられました」と、河野氏の発信から気づきを得たことに言及した。パグは「珍しいな、河野さんがそういう気づきみたいな話しますから」と、河野氏がそうした気づきを提供する発信をするのは珍しいことであるというニュアンスで反応した。前川は「はい、たまに」と応じている。具体的にどのような気づきであったかの詳細はこの会話では語られていないが、河野氏の発信が普段は気づきを提供するタイプではないこと、しかしたまにそうした発信があること自体が、前述の「不定期・希少性」の議論とも通じる構造であることが示唆されている。</p>
+<h3>その他の断片的な会話</h3>
+<p>会話の後半には、「素が大きくなりそうですね」「騒ぎますね」や、「この時間もったいないな」「焦りというものを1ミリも感じないんですね、彼は」といった断片的なやり取りがある。これらは文脈が不明確だが、何らかの映像や画面を一緒に見ながらの雑談、あるいは第三者の行動について観察・コメントしている場面と推測される。「彼」が誰を指すかは不明だが、焦りを感じない人物の特性について前川が言及しており、パグも同意している。</p></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[00:00:00]</span> <strong>前川</strong><br>川田氏のノートは不定期だが月に4〜5本が担保されており、週1回あるかないかの頻度だからありがたみがある</div>
+<div class="quote-block"><span class="timestamp">[00:00:00]</span> <strong>前川</strong><br>毎日配信だと情報が薄まる。たまに来てガツンと殴られるようなしっかりとしたボリューム感の方が嬉しい</div>
+<div class="quote-block"><span class="timestamp">[00:00:00]</span> <strong>パグ</strong><br>川田氏は一本に魂を込めて不定期配信するから、オファーが来ても気づかず買ってしまうほど自然にコンバージョンが起きる</div>
+<div class="quote-block"><span class="timestamp">[00:02:53]</span> <strong>前川</strong><br>オプトイン後10日間はやや多め（毎日ではない）で、その後は不定期で重たい内容を届けるスタイルにメルマガを設計する</div>
+<div class="quote-block"><span class="timestamp">[00:02:53]</span> <strong>前川</strong><br>一個のコンテンツを渋滞させてもしょうがない。それぞれが良い範囲で届くのがベスト</div>
+<div class="quote-block"><span class="timestamp">[00:03:37]</span> <strong>前川</strong><br>Xでの短文投稿はもうあまり意味がない</div>
+<div class="quote-block"><span class="timestamp">[00:03:37]</span> <strong>前川</strong><br>堀江さんの毎日メルマガも結局聞けていない。毎日来て未読の山になっている</div>
+<div class="quote-block"><span class="timestamp">[00:03:37]</span> <strong>前川</strong><br>南波さんのメルマガはたまに届くから『あ、南波さんからメール来てるわ』と注目して見る</div>
+<div class="quote-block"><span class="timestamp">[00:03:37]</span> <strong>パグ</strong><br>たまにだから「今見とかないと」となる。次いつ来るか分からないから</div>
+<div class="quote-block"><span class="timestamp">[00:04:51]</span> <strong>前川</strong><br>めちゃくちゃ久しぶりに河野さんの発信で勉強になった。気づきを与えられた</div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">アクションアイテム</h2>
+  <table class="data-table"><thead><tr><th>担当</th><th>タスク</th><th>期限</th><th>ステータス</th></tr></thead><tbody><tr><td>前川</td><td>メルマガの配信設計：オプトイン後10日間はやや多め（毎日ではない）、以降は不定期で重厚な内容を届けるスタイルに変更</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr></tbody></table>
+</div>
+
+<div class="section">
+  <h2 class="section-title">抽出されたナレッジ</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    ナレッジを表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <h3 class="section-subtitle" style="color:#1a73e8;">マーケティング知見</h3><div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>コンテンツ配信の希少性戦略：不定期×高品質が最適解</h4><p>毎日配信は情報の薄まりと未読の山を生む。月4〜5本程度の不定期かつ高品質な配信が、受け手のありがたみ・開封率・コンバージョンを最大化する。「たまに来てガツンと殴られる」ボリューム感が理想。川田氏のnote、南波氏のメルマガが成功事例。堀江氏の毎日メルマガは逆に消化されない。不定期配信は「次いつ来るか分からない」FOMO効果を生み、「今見とかないと」という緊急性を喚起する。結果としてオファー時のコンバージョンも自然に発生する。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>オプトインシーケンスの頻度設計</h4><p>オプトイン直後10日間はサービス的に通常より多めに配信（ただし毎日ではない）。10日間以降は不定期で重たい内容を届けるスタイルに移行する。これにより初期のエンゲージメント構築と長期的な希少性維持を両立する。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>マルチチャネル配信の渋滞回避</h4><p>メルマガ・YouTube・X等の複数チャネルを運用する場合、各チャネル単体の頻度だけでなく、受け手が受け取る情報の総量を考慮する必要がある。一つのコンテンツを渋滞させず、「それぞれが良い範囲で届く」状態がベスト。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>X（旧Twitter）短文投稿の効果低下</h4><p>Xにおける短文投稿はもうあまり意味がないという認識。情報が多すぎると受け手の処理能力を超える。</p></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <h4>整形済み会話テキスト</h4>
+<p>---</p>
+<p>**前川**: ノートも、不定期だけど定期の中で、1ヶ月の中である程度の数が担保されているという状態だからすごく価値があるなと思っていて。ある程度月に何本かは見れるっていうのが、4本5本くらいかな、ある程度約束された状態で、でもいつ来るか分からないし頻度的にも週1回あるかないかだから、結構ありがたみがあるというか。</p>
+<p>**パグ**: なるほど。堀江さんのもののように毎週来たりすると、それはそれで読まなくなるみたいな。</p>
+<p>**前川**: そう、ありがたみはなくなるような感じがして。物理的にぶっちゃけ情報も面白くなくなるじゃないですか、毎日だと薄まっていくんで。それだったら、たまに来てガツンと殴られるような、結構しっかりとしたボリューム感の方が嬉しいような感じっていうふうに思いますよね。</p>
+<p>**パグ**: 確かに。川田さんも好きに書けとか、そのぐらいだと思うんですけど、相当頑張ってますよね。一本に魂を込めてるのかなというか、こういう発見があったのかなとか。そういう時にしか来てくれないから、でも毎回そういう発信だから、オファーが来ても気づかず買っちゃうみたいな。</p>
+<p>**前川**: ああ、なるほど。</p>
+<p>[00:02:53]</p>
+<p>**前川**: オプトインして10日間はちょっとサービス的な感じでいつもより多めだけど、それでも毎日ではない感じにしておいて、あとはもっと不定期で、たまに重たい内容で殴ってくるみたいなスタイルにメルマガしましょうかね。</p>
+<p>**パグ**: YouTubeもやってきますもんね。</p>
+<p>**前川**: だから、あんまり一個のコンテンツを渋滞させてもっていうのはありますよね。</p>
+<p>**パグ**: だからそれぞれが良い範囲で届くみたいな。</p>
+<p>**前川**: それがベストですね、間違いなく。</p>
+<p>[00:03:37]</p>
+<p>**前川**: Xでも、短文の投稿ってもうあまり意味がないですよね。</p>
+<p>**パグ**: あと多すぎると、多すぎるんで処理ができない。</p>
+<p>**前川**: 確かに。聞けないですからね。結局だから堀江さんとかの毎日メルマガも聞けてないからね。毎日来て未読の山みたいな。</p>
+<p>**パグ**: まあ、そうですからね。週1回とかだったら確かに、心が空いてる時にちゃんと聞けるっていうか。</p>
+<p>**前川**: 僕もだから南波さんのメルマガとか、たまに届くと「あ、南波さんからメールが来てるわ」って言って見ますからね。</p>
+<p>**パグ**: たまにだから「今見とかないと」ってなるじゃないですか。次いつ来るか分からないから。</p>
+<p>[00:04:51]</p>
+<p>**前川**: めちゃくちゃ久しぶりに河野さんの発信で勉強になったというか、「確かに」って気づきを与えられました。</p>
+<p>**パグ**: 珍しいな、河野さんがそういう気づきみたいな話しますから。</p>
+<p>**前川**: はい、たまに。</p>
+<p>[00:06:32]</p>
+<p>**パグ**: 素が大きくなりそうですね。</p>
+<p>**前川**: 騒ぎますね。</p>
+<p>[00:06:57]</p>
+<p>**パグ**: この時間もったいないな。</p>
+<p>**前川**: 焦りというものを1ミリも感じないんですね、彼は。</p>
+<p>**パグ**: なんかねぇ。</p>
+    </div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/03/12 09:00
+</div>
+
+</div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
+</body>
+</html>
