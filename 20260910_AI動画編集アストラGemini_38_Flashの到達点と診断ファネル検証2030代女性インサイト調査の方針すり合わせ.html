@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI動画編集（アストラ／Gemini 3.8 Flash）の到達点と、診断ファネル検証・20〜30代女性インサイト調査の方針すり合わせ</title>
+<style>
+:root {
+  --primary: #1a73e8;
+  --bg: #fafbfc;
+  --card-bg: #ffffff;
+  --text: #24292e;
+  --text-secondary: #586069;
+  --border: #e1e4e8;
+  --accent-blue: #e8f0fe;
+  --accent-green: #e6f4ea;
+  --accent-red: #fce8e6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+/* ヘッダー */
+.doc-header {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.doc-header h1 {
+  font-size: 1.75em;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.meta-label {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.meta-value {
+  font-size: 0.95em;
+}
+
+/* バッジ */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.badge-cat {
+  background: var(--accent-blue);
+  color: var(--primary);
+}
+
+.badge-tag {
+  background: #f0f0f3;
+  color: #555;
+}
+
+.badge-role {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* セクション */
+.section {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.section-subtitle {
+  font-size: 1em;
+  font-weight: 600;
+  margin: 20px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid currentColor;
+}
+
+/* 要約リスト */
+.summary-list {
+  list-style: none;
+  counter-reset: summary;
+}
+
+.summary-list li {
+  counter-increment: summary;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  border-bottom: 1px solid #f0f0f3;
+}
+
+.summary-list li:last-child {
+  border-bottom: none;
+}
+
+.summary-list li::before {
+  content: counter(summary);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 24px;
+  height: 24px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* 詳細要約 */
+.detailed-summary h3 {
+  color: var(--primary);
+  font-size: 1.05em;
+  margin: 24px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e8f0fe;
+}
+
+.detailed-summary h3:first-child {
+  margin-top: 0;
+}
+
+.detailed-summary p {
+  margin: 8px 0;
+  color: var(--text);
+}
+
+.detailed-summary strong {
+  color: var(--text);
+}
+
+.detailed-summary ul {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.detailed-summary li {
+  margin: 4px 0;
+}
+
+/* 引用ブロック */
+.quote-block {
+  padding: 12px 16px;
+  border-left: 3px solid var(--primary);
+  background: #f8f9fb;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  font-size: 0.95em;
+}
+
+.timestamp {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Monaco', monospace;
+}
+
+/* テーブル */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.data-table th {
+  background: #2d2d2d;
+  color: #fff;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9em;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tr:nth-child(even) {
+  background: #f8f9fb;
+}
+
+.status-pending {
+  background: #fff3cd;
+  color: #856404;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+.status-done {
+  background: #d4edda;
+  color: #155724;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.85em;
+}
+
+/* ナレッジカード */
+.knowledge-card {
+  padding: 16px 20px;
+  background: #f8f9fb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border-left: 4px solid var(--primary);
+}
+
+.knowledge-card h4 {
+  font-size: 0.95em;
+  margin-bottom: 4px;
+}
+
+.knowledge-source {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.knowledge-card p {
+  font-size: 0.9em;
+  margin: 0;
+}
+
+/* トランスクリプト */
+.transcript {
+  background: #f8f9fb;
+  border-radius: 12px;
+  padding: 24px;
+  font-size: 0.9em;
+}
+
+.transcript .speaker {
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 16px;
+  display: block;
+}
+
+.transcript p {
+  margin: 4px 0;
+}
+
+/* 折りたたみセクション */
+.collapsible-toggle {
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  justify-content: center;
+}
+
+.collapsible-toggle:active {
+  opacity: 0.85;
+}
+
+.collapsible-toggle .arrow {
+  transition: transform 0.2s;
+  font-size: 0.8em;
+}
+
+.collapsible-content {
+  display: none;
+  margin-top: 16px;
+}
+
+.collapsible-content.open {
+  display: block;
+}
+
+.collapsible-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* フッター */
+.doc-footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+/* レスポンシブ */
+@media (max-width: 640px) {
+  .container { padding: 16px; }
+  .doc-header, .section { padding: 20px; border-radius: 12px; }
+  .meta-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="doc-header">
+  <h1>AI動画編集（アストラ／Gemini 3.8 Flash）の到達点と、診断ファネル検証・20〜30代女性インサイト調査の方針すり合わせ</h1>
+  <div class="meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">日付</span>
+      <span class="meta-value">2026年09月10日</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">録音時間</span>
+      <span class="meta-value">不明</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">話者</span>
+      <span class="meta-value">前川, パグ</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">前川の立場</span>
+      <span class="badge badge-role" style="background:#34a853;">参加者</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">カテゴリ</span>
+      <span class="meta-value"><span class="badge badge-cat">philosophy</span></span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">タグ</span>
+      <span class="meta-value"><span class="badge badge-tag">#AI動画編集</span> <span class="badge badge-tag">#アストラ</span> <span class="badge badge-tag">#Gemini3.8Flash</span> <span class="badge badge-tag">#マルチモーダル</span> <span class="badge badge-tag">#素材調達</span> <span class="badge badge-tag">#実写素材</span> <span class="badge badge-tag">#工程圧縮</span> <span class="badge badge-tag">#動画クリエイティブ</span> <span class="badge badge-tag">#テロップ同期</span> <span class="badge badge-tag">#演出設計</span> <span class="badge badge-tag">#戸籍謄本</span> <span class="badge badge-tag">#ズームから引く</span> <span class="badge badge-tag">#診断ファネル</span> <span class="badge badge-tag">#VSL</span> <span class="badge badge-tag">#カルーセルアンケート</span> <span class="badge badge-tag">#CPA</span> <span class="badge badge-tag">#ファネル検証</span> <span class="badge badge-tag">#PDCA</span> <span class="badge badge-tag">#オーガニック</span> <span class="badge badge-tag">#SNSアカウント</span> <span class="badge badge-tag">#インサイト調査</span> <span class="badge badge-tag">#20代女性</span> <span class="badge badge-tag">#30代女性</span> <span class="badge badge-tag">#ネイティブ20代</span> <span class="badge badge-tag">#サンプルバイアス</span> <span class="badge badge-tag">#マッチングアプリ</span> <span class="badge badge-tag">#with</span> <span class="badge badge-tag">#Pairs</span> <span class="badge badge-tag">#定性インタビュー</span> <span class="badge badge-tag">#リリースタイミング</span></span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">3行要約</h2>
+  <ol class="summary-list"><li>アストラ＋Gemini 3.8 Flashによる動画編集が、素材を渡すだけでカット・テロップ・音声のタイミングまで一発で完璧に出せる水準に達しており、人間の仕事は「素材を用意すること」だけになったと前川が共有した。</li>
+<li>パグさんから、現行の診断ファネル（診断→結果→オファー）に対して「カルーセルアンケート→VSL→オファー」型の旧ファネルを再検証する提案があり、診断は目的が診断にすり替わって後段のオファーが刺さりにくい／申込CPAはVSL型の方が安い可能性があるという仮説が示された。</li>
+<li>前川は当面の重点をCR素材とSNSオーガニックの2点に置き、リリースを土曜に出す方針と、20〜30代の「ザ・一般」女性のインサイト解像度を上げるための生態調査（マッチングアプリ経由の個別面談を含む）を宣言した。</li></ol>
+</div>
+
+<div class="section">
+  <h2 class="section-title">詳細要約</h2>
+  <div class="detailed-summary"><h3>アストラによる動画編集の到達点（素材を渡すだけで広告アフィリ級のクオリティ）</h3>
+<p>冒頭、前川は直前に見せた（あるいは共有した）動画クリエイティブについて「死ぬほどクオリティ高い、もう広告アフィリのやつじゃんみたいな」と評した。パグさんはこれを「素材を撮ってきたようなやつ」かと確認しており、実写素材を前提にした制作物だと受け取っている。前川はこれを肯定し、重要な点として「実際の素材があって、それをアストラが自由に選んで作ったやつ」であると明かした。</p>
+<p>ここで前川が強調したのは、AIに対する指示の粒度が劇的に粗くなったことである。従来であれば「この順番で」とカット順を人間が指定する必要があったが、アストラは素材を渡せば構成の順番そのものを自分で組んでくれる。前川はこれを「だからいちいち『この順番で』みたいなことを言わなくても、順番を組んでくれる」「頭いいっす」と表現した。パグさんも「すごい」と反応しており、編集指示の設計という作業工程自体が消えつつあるという認識が共有された。</p>
+<p>さらに前川は品質の安定性についても言及している。「基本、その辺はもう一発で完璧に出してくれます。切り替え、映像、音声、あとテロップの切り替えのタイミングとかは、アストラだったら一発出しで完璧に出してきます」と述べ、カット切り替え・映像・音声・テロップ同期という編集の主要4要素が、リテイク前提ではなく一発出しで担保される水準になっていると断言した。パグさんは現場感覚として「一番あれって、テロップと音声がずれてたりすることが多いんですけど」と、人間／従来ツールでの典型的な品質事故を挙げ、前川の「めっちゃなめらかじゃないですか」という評価に「その2つがちゃんとできるようになってきたら、本当に……」と応じている。ここでの「その2つ」は、映像・音声の流れとテロップ・音声の同期を指す。</p>
+<h3>技術的な仕組み：Gemini 3.8 Flashをアストラが動かすマルチモーダル構成</h3>
+<p>前川は上記の品質が出る理由を技術構成として説明した。「Geminiの3.8を地味に使ってるんですよ」「Gemini 3.8 Flashっていうモデルがあるんですけど」と具体的なモデル名を挙げ、採用理由を「Geminiが一番、音声と映像に対する認識能力が高いんで」と述べている。その上でマルチモーダルという概念を「テキストだけじゃなくて、三次元的っていうか、映像とか音声も理解することができる」と自分の言葉で説明した。</p>
+<p>アーキテクチャとしては「Geminiを使ってそういうのを理解させて、Geminiをアストラが動かす」という二層構成である。つまり映像・音声の内容理解をGemini 3.8 Flashに担わせ、その理解結果をもとに編集判断・構成組みをアストラ側が実行する。この構成の実務上の効果として前川が挙げたのは、「映像と音声の流れ、タイミングのずれとかもAIが理解してくれる」こと、具体的には「タイミングがちょっとずれてるから」といったレベルの判断をAI側が自律的に行える点である。従来は人間の目と耳でしか検知できなかったズレの検出が、モデル側の認識能力に載ったことで編集ループに内製化されたという整理になる。</p>
+<h3>AI編集時代に残る唯一のボトルネック＝実写素材</h3>
+<p>「あとは基本、素材を用意するだけで」というパグさんの確認に対し、前川は「そうですね、僕らの仕事は素材を用意するだけです」と明言した。これは制作体制の再定義であり、編集工程ではなく素材調達が唯一のボトルネックになったという宣言である。</p>
+<p>素材の質について前川は明確な優先順位を示した。「やっぱりまだ、実際に撮った素材の方がいいというか、AI生成素材だとちょっとまだ弱い」として、現時点ではAI生成素材が実写に劣るという評価を下している。その上で次善策として「せめて写真が欲しいですね、動画じゃないにしても。せめて静止画があれば、それを無理やり動かすんで」と述べ、静止画→モーション化という逃げ道があることも示した。最優先は「一番はほんと、スマホでリアルに撮った動画素材」であり、機材品質ではなくリアルさ・スマホ撮影の生っぽさが価値であるという判断が読み取れる。</p>
+<p>工程圧縮の効果についてはパグさんが「それだけでも結構、圧縮できるんで」と述べ、前川が「業務工程はもう圧倒的に圧縮できますね」と同意した。前川はその実感を外部発注の待ち時間への拒否感として表現しており、「だから今もう、動画編集で『2、3日待ってください』とか『1週間』とか言われると無理っすもん」「『はい?』って」と述べている。AI編集の内製化によって、外部編集者のリードタイムが許容不能になったという基準の変化である。</p>
+<h3>シナリオ演出の相談：戸籍謄本をどう見せるか</h3>
+<p>前川は制作中のシナリオについて具体的な演出相談をパグさんに持ち込んだ。題材は「元カレの戸籍謄本」をシナリオ内で提示する場面で、課題は「パッと見ても戸籍謄本だと分かんない」という視認性の問題である。つまり小道具としてのインパクトはあるが、視聴者がそれが何の書類かを一瞬で認識できないという構造的な弱点がある。</p>
+<p>アストラから出た案は「『彼の戸籍謄本』みたいなテキストを入れる」というテロップによる明示だったが、前川はこれを「いまいちどうかな」と評価を保留した。前川が対比として挙げた選択肢は2つある。ひとつは拡大の演出、すなわち「一発この戸籍謄本みたいな、ここからこの辺を映して、次の画角で引く」というズームイン→引きのカメラワークで書類の正体を段階的に理解させる方法。もうひとつは「テキストで、謄本の内容を説明しちゃう」という説明的なテロップ方式である。前川は後者について「でも説明しちゃうのは、ちょっと違うかなと思ってる」と自ら否定的な立場を示しており、説明過多が演出を殺すという判断をしている。</p>
+<p>パグさんは「ズームから引く感じですかね」と前者を推し、前川も「やっぱりそうですよね。一回それで作ったものを……」と合意して、まずズーム→引きの構成で一度作ってみる方向に落ち着いた。意思決定の型としては、言語による説明ではなく画角の変化で情報を渡すという選択であり、前段のAI編集の文脈（テロップを足すのではなく映像で見せる）と一貫している。</p>
+<h3>当面の戦略方針：CR素材とオーガニックの2点集中、リリースは土曜</h3>
+<p>施策の進め方について、前川はまず資金を貯めて構えるような発想を否定した。「いや、貯金ではないような気がしますね。とりあえず僕がいろいろ頑張るっていう」「ひたすらPDCAを回しまくるみたいな感じかなと思ってて」と述べ、手数と回転で勝つ方針を示した。具体的な回し方は「またいろいろ新しいクリエイティブとか、素材を変えて出してみて、数字を見てパグさんに相談して」という、クリエイティブ投入→数値確認→パグさんとの協議のループである。パグさんはこれを「ガチャガチャと」と要約している。</p>
+<p>重点領域について前川は「僕の方は、ほんとにCRの素材と、あとはSNSのアカウント、オーガニックのところがキーポイントかなっていうのは思ってた」と述べ、広告クリエイティブ素材とSNSオーガニックの2点に絞って重点的に攻める方針を明言した。</p>
+<p>タイミングについては、「リリースが多分もう今日明日にできると思うんで、可能だったら明日、土曜日に出そうかな」とし、理由として「多分金曜より土曜の方が反応が取れそうな気がしてて」という曜日別の反応仮説を挙げている。根拠は感覚ベースで示されており、検証前の仮説として扱われている。加えて「さっき話した素材周りをちょっと新しく作って、シナリオを変えていく」と、前段の戸籍謄本シーンを含むシナリオ改訂も並行タスクとして置いた。</p>
+<h3>パグさんからのファネル検証提案：診断ファネル vs VSLファネル</h3>
+<p>パグさんは現状の構成を「今、診断のファネルを使ってると思うんですけど」と確認した上で、別パターンの存在を持ち出した。「最初からVSLを出して、そのままオファーに繋げるシナリオもあって」という提案で、前川が「今はこっちは回してるけどこっちは回してない、っていう感じですか、VSLの方は」と確認したところ、パグさんはそれが「前にやってたやつ」「診断なしでやってた調査」、つまり過去に運用実績のある構成だと答えている。</p>
+<p>パグさんが具体的に示したVSL型ファネルの構造は、「エージェントで、最初にアンケートをカルーセルで答えさせて、VSLに引き込んで、そこのページにオファーがある」というもの。カルーセル形式のアンケートを入口にして軽い関与を取り、そこからVSL（ビデオセールスレター）へ送客し、同一ページ内にオファーを置く設計である。パグさんはこれを「今、試そうとしてて」と、検証着手の意思を示した。</p>
+<p>パグさんは比較対象となる分岐も整理している。すなわち(1)診断をして結果を出し、そこからVSLを出してオファーを出す、(2)VSLは出さずにカットして診断結果から直接オファーを出す、(3)その逆順、という複数パターンであり、現行は診断ベースで回している状態である。</p>
+<p>仮説の中身は2点ある。ひとつは診断ファネルの構造的弱点で、「目的が診断になってしまって、やっぱりその後の圧が刺さりづらいのかな」という見立てである。ユーザーのゴールが「診断結果を知ること」で満たされてしまうため、後段のオファーに対する訴求圧が通りにくくなるという論理である。もうひとつは経済性で、「お金がかかりやすく取れるのは真ん中なんですけど、VSLの方は、その申込みのCPAの時点では、もしかしたら診断より安いんじゃないか」として、申込CPAベースではVSL型が診断型より有利な可能性を指摘し、「そこをちょっと検証しようかな」と検証対象として切り出した。前川は「なるほどなるほど」と受け、パグさん側の検証として了解している。</p>
+<h3>20〜30代女性インサイトの解像度不足と「ネイティブ20代」生態調査</h3>
+<p>前川が自らの弱点として挙げたのが、ターゲット層のインサイト解像度である。「20〜30代のインサイトを研究します。そもそも恋愛とか関係なしに、あいつら何考えてんだろうなと思ってて」と述べ、恋愛文脈に限定せず一般的な価値観・行動様式を掴む必要があるとした。現状を「一般の20〜30代の女性って、そこの生態をちょっとつかみきれてないのが、問題じゃないけどちょっと今、弱いところな気もしてる」と自己評価している。</p>
+<p>原因として前川が明確に指摘したのはサンプルバイアスである。「僕が会ってる20〜30代の女性はちょっと偏っちゃってるんで」「良くないなと思って」とし、具体的には「平気でアフヌン（アフタヌーンティー）とか行ってるような、ちょっとキラキラ系の港区女子みたいな感じの子としか僕も関わってない」と自身の交友関係の偏りを明示した。その上で必要なのは「もうちょっと、ほんと『ザ・一般』みたいな」層であるとし、パグさんが提示した「ネイティブ20代」という呼称を前川も採用して「ネイティブ20代のちょっと生態調査をしようかなと思ってます」と宣言した。</p>
+<p>調査すべき解像度の軸についても具体化されている。前川は年齢による変化を前提に「20代の一般女性が何に関心を持ってるのか。中後半からまた変わるじゃないですか。中後半で30代になってまた変わるから」と、20代前半／20代中後半／30代で別物として扱う必要があるとした。見るべき対象は「日々触れているコンテンツだったりとか、どういう生活をしてるのか」であり、さらに端的に「普段何を見て、それをどう感じて、どれくらいで、何にお金を使っているのか」という4点（接触コンテンツ／受け取り方／頻度や量／支出先）にまとめている。パグさんも「全然わかりづらいですからね」と同意した。</p>
+<p>関連して前川は参考事例にディズニーを挙げ、「ディズニーとか、めっちゃまさにって感じでした。ほんと大学生、高校生から大学生、20代前半・中盤くらいはすごく刺さりそうな感じの」と、若年層に刺さるコンテンツの実例として位置づけている。</p>
+<h3>調査手法の具体化：マッチングアプリを一般層サンプルの取得経路にする</h3>
+<p>調査経路として前川が思いついたのがマッチングアプリである。「マッチングアプリあるか?」という問いに対し、パグさんは「もう一番、調査できる気がしますよね。普通の人しかいない」（※一般層が母集団である）と応じ、前川も「普通の人っすもんね。withとかPairsとか、普通の子じゃないですか」とサービス名を具体的に挙げた。さらに「しかも恋愛に興味がある感じですよね」と、母集団が一般層でありながら恋愛関心が担保されている点を評価し、「確かに、絶好のインサイト調査かもしれないですね」と手法として採用する方向に傾いた。</p>
+<p>実行設計としては「その30代から40代に絞って、実際に住んでる人たちが出てくるかもしれないので。その人たちと何人か会って、簡単に、一人ずつ会ってみる」と、年齢帯を絞った上で個別面談形式で複数人に会う進め方を示した。コストについては「適当な、そこそこいいカフェに入って、お車代だけ払ってあげれば満足するんすもんね。安いっすよね、めっちゃ」と述べ、カフェ代＋交通費程度で定性調査が成立するという経済性を評価している。パグさんも低コストで済む点を「アリだな。よし、いい」と肯定した。</p>
+<p>会話の最後は「あと、どうやって（聞き取り不明）まで入れ替えます?」という前川の別論点の切り出しで、内容が判別できない状態で途切れている。</p></div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">キーポイント・重要発言</h2>
+  <div class="quote-block"><span class="timestamp">[00:00:00]</span> <strong>前川</strong><br>「死ぬほどクオリティ高い、もう広告アフィリのやつじゃんみたいな」——アストラが実写素材から自由に選んで組んだ動画の品質評価</div>
+<div class="quote-block"><span class="timestamp">[00:00:20]</span> <strong>前川</strong><br>「いちいち『この順番で』みたいなことを言わなくても、順番を組んでくれる」——構成設計自体をAIが担うようになった</div>
+<div class="quote-block"><span class="timestamp">[00:00:42]</span> <strong>前川</strong><br>Gemini 3.8 Flashを採用。「Geminiが一番、音声と映像に対する認識能力が高い」「Geminiを使って理解させて、Geminiをアストラが動かす」</div>
+<div class="quote-block"><span class="timestamp">[00:01:30]</span> <strong>前川</strong><br>「映像と音声の流れ、タイミングのずれとかもAIが理解してくれる」——ズレ検知が編集ループに内製化された</div>
+<div class="quote-block"><span class="timestamp">[00:01:50]</span> <strong>パグ</strong><br>「一番あれって、テロップと音声がずれてたりすることが多いんですけど」——従来の典型的な品質事故</div>
+<div class="quote-block"><span class="timestamp">[00:02:16]</span> <strong>前川</strong><br>「切り替え、映像、音声、あとテロップの切り替えのタイミングとかは、アストラだったら一発出しで完璧に出してきます」</div>
+<div class="quote-block"><span class="timestamp">[00:02:30]</span> <strong>前川</strong><br>「僕らの仕事は素材を用意するだけです」——制作体制の再定義</div>
+<div class="quote-block"><span class="timestamp">[00:02:43]</span> <strong>前川</strong><br>「AI生成素材だとちょっとまだ弱い」「せめて静止画があれば、それを無理やり動かす」「一番はほんと、スマホでリアルに撮った動画素材」</div>
+<div class="quote-block"><span class="timestamp">[00:03:30]</span> <strong>前川</strong><br>「動画編集で『2、3日待ってください』とか『1週間』とか言われると無理っすもん」——外部発注リードタイムの許容不能化</div>
+<div class="quote-block"><span class="timestamp">[00:04:06]</span> <strong>前川</strong><br>元カレの戸籍謄本をシナリオで出すが「パッと見ても戸籍謄本だと分かんない」。アストラ案のテキスト明示は保留、説明テロップは「ちょっと違う」</div>
+<div class="quote-block"><span class="timestamp">[00:05:13]</span> <strong>パグ</strong><br>「ズームから引く感じですかね」——戸籍謄本はズームイン→引きの画角変化で見せる方向に合意</div>
+<div class="quote-block"><span class="timestamp">[00:11:40]</span> <strong>前川</strong><br>「貯金ではない」「ひたすらPDCAを回しまくる」——素材を変えて出し、数字を見てパグさんに相談するループ</div>
+<div class="quote-block"><span class="timestamp">[00:12:06]</span> <strong>パグ</strong><br>現行は診断ファネル。別案として「最初からVSLを出して、そのままオファーに繋げるシナリオ」がある（以前に運用実績あり）</div>
+<div class="quote-block"><span class="timestamp">[00:12:40]</span> <strong>パグ</strong><br>「最初にアンケートをカルーセルで答えさせて、VSLに引き込んで、そこのページにオファーがある」ファネルを今から試す</div>
+<div class="quote-block"><span class="timestamp">[00:13:24]</span> <strong>パグ</strong><br>「目的が診断になってしまって、その後の圧が刺さりづらいのかな」「申込みのCPAの時点では、もしかしたら診断より安いんじゃないか」</div>
+<div class="quote-block"><span class="timestamp">[00:13:57]</span> <strong>前川</strong><br>「CRの素材と、あとはSNSのアカウント、オーガニックのところがキーポイント」——2点集中。リリースは金曜より反応が取れそうな土曜に出す</div>
+<div class="quote-block"><span class="timestamp">[00:14:50]</span> <strong>前川</strong><br>「20〜30代のインサイトを研究します」「僕が会ってる20〜30代の女性はちょっと偏っちゃってる」——港区女子寄りのサンプルバイアスを自覚</div>
+<div class="quote-block"><span class="timestamp">[00:15:45]</span> <strong>前川</strong><br>20代前半／中後半／30代で関心が変わる。「普段何を見て、それをどう感じて、どれくらいで、何にお金を使っているのか」を解像度軸に</div>
+<div class="quote-block"><span class="timestamp">[00:16:55]</span> <strong>前川</strong><br>「withとかPairsとか、普通の子じゃないですか。しかも恋愛に興味がある」——マッチングアプリを一般層インサイト調査の経路に</div>
+<div class="quote-block"><span class="timestamp">[00:17:39]</span> <strong>前川</strong><br>「そこそこいいカフェに入って、お車代だけ払ってあげれば満足する」——低コストで定性インタビューが成立する</div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">アクションアイテム</h2>
+  <table class="data-table"><thead><tr><th>担当</th><th>タスク</th><th>期限</th><th>ステータス</th></tr></thead><tbody><tr><td>前川</td><td>リリースを出す（今日明日で準備完了見込み。金曜より反応が取れそうな土曜に投下）</td><td>土曜日</td><td><span class="status-pending">未着手</span></td></tr>
+<tr><td>前川</td><td>新しいCR素材を作り直し、シナリオを変更して投下する（PDCAを回し、数字を見てパグさんに相談）</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr>
+<tr><td>前川</td><td>戸籍謄本の見せ方を「ズームイン→引き」の画角変化で一度作ってみる</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr>
+<tr><td>前川</td><td>20〜30代の「ザ・一般」女性（ネイティブ20代）のインサイト・生態調査。接触コンテンツ／受け取り方／頻度／支出先を20代前半・中後半・30代で分けて解像度を上げる</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr>
+<tr><td>前川</td><td>マッチングアプリ（with、Pairs等）経由で対象年齢帯の一般層と個別に会い、カフェ＋お車代で定性インタビューを実施</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr>
+<tr><td>前川</td><td>CR素材とSNSオーガニックの2点に重点を置いて攻める</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr>
+<tr><td>パグ</td><td>「カルーセルアンケート→VSL→同一ページ内オファー」型ファネルをテストし、現行の診断ファネルと申込CPAを比較検証する</td><td>未定</td><td><span class="status-pending">未着手</span></td></tr></tbody></table>
+</div>
+
+<div class="section">
+  <h2 class="section-title">抽出されたナレッジ</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    ナレッジを表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <h3 class="section-subtitle" style="color:#1a73e8;">マーケティング知見</h3><div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>AI編集が一発出し水準に達した結果、制作のボトルネックは「素材調達」だけになる</h4><p>アストラ＋Gemini 3.8 Flashの構成では、カット切り替え・映像・音声・テロップ同期という編集の主要4要素が一発出しで完成水準に届く。指示も「この順番で」と構成を指定する必要がなく、素材を渡せばAIが構成順を組む。結果として人間の役割は「素材を用意するだけ」に縮退する。素材の質には明確な優先順位があり、(1)スマホでリアルに撮った実写動画が最上、(2)次善は静止画（無理やり動かす）、(3)AI生成素材は現時点ではまだ弱い。この体制転換は工程時間にも直接効き、外部編集者の「2、3日」「1週間」というリードタイムが許容不能な基準になる。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>映像・音声の理解はマルチモーダルモデルに担わせ、編集判断はエージェントが実行する二層構成</h4><p>Gemini 3.8 Flashは音声と映像に対する認識能力が最も高く、テキストだけでなく映像・音声を理解できる（マルチモーダル）。そこで「Geminiに素材を理解させ、そのGeminiをアストラが動かす」という二層構成を組む。この構成の実務的な効果は、従来は人間の目と耳でしか検知できなかった映像と音声の流れのズレ、テロップと音声の同期ズレを、AI側が「タイミングがちょっとずれてるから」というレベルで自律検知・修正できるようになる点にある。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>書類・小道具の提示は説明テロップではなく画角の変化で理解させる</h4><p>戸籍謄本のように「パッと見てそれが何か分からない」小道具をシナリオで出す場合、(A)「彼の戸籍謄本」等のテキストを置く、(B)内容を説明するテロップを入れる、(C)寄りで一部を映してから引く、の選択肢がある。前川は(B)の説明方式を「説明しちゃうのはちょっと違う」と退け、(C)のズームイン→引きを採用方向とした。言語で説明を足すのではなく、画角の変化によって視聴者に自力で理解させる方が演出として強い、という判断基準。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>ターゲットのインサイトは自分の交友関係から推定してはいけない（サンプルバイアスの自覚）</h4><p>前川は自身が会っている20〜30代女性が「アフタヌーンティーに平気で行くキラキラ系の港区女子」に偏っていることを自覚し、それを根拠にした一般化を「良くない」と退けた。必要なのは「ザ・一般」=ネイティブ20代の生態である。調査の解像度軸は、(1)普段何を見ているか（接触コンテンツ）、(2)それをどう感じているか、(3)どれくらいか（頻度・量）、(4)何にお金を使っているか。加えて、20代前半／20代中後半／30代で関心が変わることを前提に、年齢帯を分けて掴む。恋愛という文脈に限定せず、そもそも何を考えているかから入る。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>マッチングアプリは「一般層かつ関心が担保されたサンプル」の取得経路として使える</h4><p>with、Pairs等のマッチングアプリの母集団は「普通の人しかいない」ため、自分の交友関係の偏りを回避した一般層サンプルが取れる。さらに恋愛関心が構造的に担保されているため、恋愛系商材のインサイト調査としては母集団の質が高い。実行は年齢帯を絞って複数人と一人ずつ会う個別面談形式、コストはそこそこ良いカフェ代＋お車代のみで成立するため、定性調査として極めて安い。</p></div>
+<div class="knowledge-card" style="border-left-color:#1a73e8;"><h4>資金を溜めて構えるのではなく、クリエイティブ差し替えで手数を回す</h4><p>「貯金ではない」「ひたすらPDCAを回しまくる」という方針。新しいクリエイティブ・素材を変えて出し、数字を見て運用担当に相談する、というループを回転させる。重点領域は絞る（今回はCR素材とSNSオーガニックの2点）。投下タイミングも仮説を持つ（金曜より土曜の方が反応が取れそう）。</p></div>
+<h3 class="section-subtitle" style="color:#ea4335;">第三者の知見</h3><div class="knowledge-card" style="border-left-color:#ea4335;"><h4>診断ファネルの構造的弱点——目的が「診断」にすり替わり、後段のオファーの圧が刺さりにくい</h4><div class="knowledge-source">発言者: パグ</div><p>現行は診断ファネル（診断→結果→オファー、または診断→結果→VSL→オファー）で運用しているが、診断を入口にするとユーザーの目的が「診断結果を知ること」で充足してしまい、その後のオファーに対する訴求圧が刺さりづらくなる可能性がある。一方で単価が取りやすいのは診断を経由する中間パターン。ただし申込CPAの時点で見ると、診断を使わないVSL型の方が安い可能性があり、そこを検証対象とする。</p></div>
+<div class="knowledge-card" style="border-left-color:#ea4335;"><h4>カルーセルアンケート→VSL→同一ページ内オファー型ファネル（診断なし構成）</h4><div class="knowledge-source">発言者: パグ</div><p>以前に運用実績のある構成として、まずカルーセル形式でアンケートに答えさせて軽い関与を取り、そこからVSL（ビデオセールスレター）に引き込み、そのページ内にオファーを置く、というファネルがある。これを再度テストする。比較すべき分岐は、(1)診断→結果→VSL→オファー、(2)診断→結果→オファー（VSLをカット）、(3)その逆順、(4)診断なしのカルーセルアンケート→VSL→オファー。どの構成が申込CPAで有利かを検証する設計になっている。</p></div>
+<div class="knowledge-card" style="border-left-color:#ea4335;"><h4>従来の動画編集で最も起きやすい品質事故はテロップと音声のズレ</h4><div class="knowledge-source">発言者: パグ</div><p>現場感覚として、動画編集の品質問題で最も頻出するのは「テロップと音声がずれている」こと。逆に言えば、映像・音声の流れの滑らかさとテロップ・音声同期の2点がAIで安定して担保できるようになれば、編集品質の評価基準としては大きな転換点になる。</p></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2 class="section-title">整形済みトランスクリプト（全文）</h2>
+  <button class="collapsible-toggle" onclick="toggleSection(this)">
+    全文を表示 <span class="arrow">▼</span>
+  </button>
+  <div class="collapsible-content">
+    <div class="transcript">
+      <p>**前川**: [00:00:00] ないっすよね。死ぬほどクオリティ高い、もう広告アフィリのやつじゃんみたいな。</p>
+<p>**パグ**: 確かに確かに。あれ、素材を撮ってきたようなやつですかね。</p>
+<p>**前川**: 素材。</p>
+<p>**パグ**: 撮ってきたような。</p>
+<p>**前川**: そう、実際の素材があって、それをアストラが自由に選んで作ったやつなんですよ。</p>
+<p>**パグ**: はいはいはい。</p>
+<p>**前川**: だからいちいち「この順番で」みたいなことを言わなくても、順番を組んでくれるんですよ。</p>
+<p>**パグ**: すごい。</p>
+<p>**前川**: 頭いいっす。</p>
+<p>**前川**: [00:00:42] Geminiの3.8を地味に使ってるんですよ。</p>
+<p>**パグ**: はい。</p>
+<p>**前川**: Gemini 3.8 Flashっていうモデルがあるんですけど、Geminiが一番、音声と映像に対する認識能力が高いんで。唯一マルチモーダルって言って、テキストだけじゃなくて——</p>
+<p>**パグ**: そう。</p>
+<p>**前川**: 三次元的っていうか、映像とか音声も理解することができるような感じなんですけど。それでGeminiを使ってそういうのを理解させて、Geminiをアストラが動かすみたいな、そういうふうにしてます。</p>
+<p>**パグ**: へー。</p>
+<p>**前川**: [00:01:30] そうすると、映像と音声の流れ、タイミングのずれとかもAIが理解してくれるんですよ。「タイミングがちょっとずれてるから」とか。</p>
+<p>**パグ**: すごいな。一番あれって、テロップと音声がずれてたりすることが多いんですけど。</p>
+<p>**前川**: めっちゃなめらかじゃないですか。</p>
+<p>**パグ**: うん。その2つがちゃんとできるようになってきたら、本当に……。</p>
+<p>**前川**: [00:02:16] でも基本、その辺はもう一発で完璧に出してくれます。切り替え、映像、音声、あとテロップの切り替えのタイミングとかは、アストラだったら一発出しで完璧に出してきます。</p>
+<p>**パグ**: あとは基本、素材を用意するだけで。</p>
+<p>**前川**: そうですね、僕らの仕事は素材を用意するだけです。</p>
+<p>**前川**: [00:02:43] やっぱりまだ、実際に撮った素材の方がいいというか、AI生成素材だとちょっとまだ弱いんで。せめて写真が欲しいですね、動画じゃないにしても。せめて静止画があれば、それを無理やり動かすんで。やっぱり一番はほんと、スマホでリアルに撮った動画素材ですね。</p>
+<p>**パグ**: それだけでも結構、圧縮できるんで。</p>
+<p>**前川**: 業務工程はもう圧倒的に圧縮できますね。だから今もう、動画編集で「2、3日待ってください」とか「1週間」とか言われると無理っすもん。</p>
+<p>**パグ**: 確かに、はい。</p>
+<p>**前川**: 「はい?」って。</p>
+<p>**前川**: [00:04:06] 戸籍謄本の見せ方どうしようかな。シナリオの中で戸籍謄本を出すんですけど。</p>
+<p>**パグ**: うん。</p>
+<p>**前川**: 元カレの。どう出そうかなと思って。パッと見ても戸籍謄本だと分かんないんで、どう見せるのがいいと思います? アストラ的には「彼の戸籍謄本」みたいなテキストを入れる感じのアイディアを出してくれたんですけど、いまいちどうかなと思ってて。もともとこんな感じなんですけど、何がいいと思います?</p>
+<p>**前川**: 拡大の演出を入れるとかですか? 一発この戸籍謄本みたいな、ここからこの辺を映して、次の画角で——</p>
+<p>**パグ**: 引く。</p>
+<p>**前川**: 引くみたいな感じがいいのか。それともこんな感じでテキストで、謄本の内容を説明しちゃうのがいいのか。でも説明しちゃうのは、ちょっと違うかなと思ってるんですけど。</p>
+<p>**パグ**: [00:05:13] ズームから引く感じですかね。</p>
+<p>**前川**: やっぱりそうですよね。一回それで作ったものを……。</p>
+<p>**前川**: [00:11:40] いや、貯金ではないような気がしますね。とりあえず僕がいろいろ頑張るっていう。</p>
+<p>**パグ**: ガチャガチャと。</p>
+<p>**前川**: ひたすらPDCAを回しまくるみたいな感じかなと思ってて。またいろいろ新しいクリエイティブとか、素材を変えて出してみて、数字を見てパグさんに相談して、みたいな感じでやると思うんで。</p>
+<p>**パグ**: [00:12:06] （聞き取り不明）今、診断のファネルを使ってると思うんですけど。</p>
+<p>**前川**: はい。</p>
+<p>**パグ**: あの、最初からVSLを出して、そのままオファーに繋げるシナリオもあって。</p>
+<p>**前川**: 今はこっちは回してるけどこっちは回してない、っていう感じですか、VSLの方は。</p>
+<p>**パグ**: （聞き取り不明）それ、前にやってたやつなんですけど。</p>
+<p>**前川**: あ、昔ですか。</p>
+<p>**パグ**: はい。診断なしでやってた調査で。</p>
+<p>**前川**: はいはいはい。</p>
+<p>**パグ**: [00:12:40] エージェントで、最初にアンケートをカルーセルで答えさせて、VSLに引き込んで、そこのページにオファーがあるっていうファネルがあるんですけど。</p>
+<p>**前川**: うんうん。</p>
+<p>**パグ**: それを今、試そうとしてて。</p>
+<p>**前川**: はい。</p>
+<p>**パグ**: あとは、診断をして結果が出て、そこからVSLを出してオファーを出すのか。</p>
+<p>**前川**: うんうん。</p>
+<p>**パグ**: VSLは出さずにカットして、そのままオファーを出すのか。あるいはその逆か。診断結果を見せてオファーを出す、でも今は診断でやってるので。</p>
+<p>**前川**: 診断の方は、と。</p>
+<p>**パグ**: そうなんですよ、はい。</p>
+<p>**前川**: うんうん。</p>
+<p>**パグ**: [00:13:24] そっちの方が刺さるんじゃないかっていうのが。目的が診断になってしまって、やっぱりその後の圧が刺さりづらいのかなっていう。</p>
+<p>**前川**: うんうん。</p>
+<p>**パグ**: お金がかかりやすく取れるのは真ん中なんですけど、VSLの方は、その申込みのCPAの時点では、もしかしたら診断より安いんじゃないかっていう。そこをちょっと検証しようかなっていう。</p>
+<p>**前川**: なるほどなるほど。</p>
+<p>**前川**: [00:13:57] 僕の方は、ほんとにCRの素材と、あとはSNSのアカウント、オーガニックのところがキーポイントかなっていうのは思ってたんで。</p>
+<p>**パグ**: うん。</p>
+<p>**前川**: 一旦ちょっと、そこの2つを重点的に攻めようかなとは思ってて。今のアクションとしては、リリースが多分もう今日明日にできると思うんで、可能だったら明日、土曜日に出そうかなと。多分金曜より土曜の方が反応が取れそうな気がしてて、土曜からちょっと出していこうかなというふうに思ってるのと。</p>
+<p>**パグ**: はい。</p>
+<p>**前川**: あとはそうだな、さっき話した素材周りをちょっと新しく作って、シナリオを変えていくのと。</p>
+<p>**前川**: [00:14:50] あと、20〜30代のインサイトを研究します。そもそも恋愛とか関係なしに、あいつら何考えてんだろうなと思ってて。一般の20〜30代の女性って、そこの生態をちょっとつかみきれてないのが、問題じゃないけどちょっと今、弱いところな気もしてるんですよ。</p>
+<p>**前川**: 世の中の20〜30代の女性。僕が会ってる20〜30代の女性はちょっと偏っちゃってるんで。</p>
+<p>**パグ**: うん。</p>
+<p>**前川**: 良くないなと思って。平気でアフヌンとか行ってるような、ちょっとキラキラ系の港区女子みたいな感じの子としか僕も関わってないんで。だからもうちょっと、ほんと「ザ・一般」みたいな。</p>
+<p>**パグ**: ネイティブ20代。</p>
+<p>**前川**: はいはい、ネイティブ20代。ネイティブ20代のちょっと生態調査をしようかなと思ってます。</p>
+<p>**前川**: [00:15:45] （聞き取り不明）だからディズニーとか、めっちゃまさにって感じでした。ほんと大学生、高校生から大学生、20代前半・中盤くらいはすごく刺さりそうな感じの。</p>
+<p>**パグ**: （聞き取り不明）はどうでしょうか?</p>
+<p>**前川**: そうだな、だから20代の一般女性が何に関心を持ってるのか。中後半からまた変わるじゃないですか。中後半で30代になってまた変わるから、この辺の生態というか、日々触れているコンテンツだったりとか、どういう生活をしてるのかっていうのを、ちょっと解像度を上げないとなと思ってて。</p>
+<p>**パグ**: [00:16:26] 全然わかりづらいですからね。（聞き取り不明）</p>
+<p>**前川**: 普段何を見て、それをどう感じて、どれくらいで、何にお金を使っているのかですよ。</p>
+<p>**パグ**: あ、そうですそうですそうです。</p>
+<p>**前川**: [00:16:55] マッチングアプリあるか?</p>
+<p>**パグ**: いや、もう一番、調査できる気がしないですよね。普通の人しかいない。</p>
+<p>**前川**: 普通の人っすもんね。withとかPairsとか、普通の子じゃないですか。しかも恋愛に興味がある感じですよね。</p>
+<p>**前川**: 確かに、絶好のインサイト調査かもしれないですね。</p>
+<p>**前川**: その30代から40代に絞って、実際に住んでる人たちが出てくるかもしれないので。その人たちと何人か会って、簡単に、一人ずつ会ってみる。</p>
+<p>**前川**: [00:17:39] 適当な、そこそこいいカフェに入って、お車代だけ払ってあげれば満足するんすもんね。安いっすよね、めっちゃ。</p>
+<p>**パグ**: （聞き取り不明）で済むのはアリだな。よし、いい。</p>
+<p>**前川**: [00:18:12] あと、どうやって（聞き取り不明）まで入れ替えます?</p>
+<p>**パグ**: うん。</p>
+    </div>
+  </div>
+</div>
+
+<div class="doc-footer">
+  音声ナレッジシステムにより自動生成 | 処理日時: 2026/09/10 19:56
+</div>
+
+</div>
+<script>
+function toggleSection(btn) {
+  var content = btn.nextElementSibling;
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open');
+  btn.classList.toggle('open');
+  var label = btn.textContent.trim().replace(' ▼', '').replace(' ▲', '');
+  if (isOpen) {
+    btn.innerHTML = label + ' <span class="arrow">▼</span>';
+  } else {
+    btn.innerHTML = label + ' <span class="arrow">▲</span>';
+  }
+}
+</script>
+</body>
+</html>
